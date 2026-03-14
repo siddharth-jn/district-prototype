@@ -1,0 +1,6 @@
+.main-content {
+    padding-bottom: 80px;
+    /* Space for bottom nav */
+    min-height: 100vh;
+    background-color: var(--color-bg-light);
+}
