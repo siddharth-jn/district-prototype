@@ -83,6 +83,13 @@ const Movies = () => {
                                     <div className="movie-info">
                                         <div className="movie-title">{item.title}</div>
                                         <div className="movie-genre">{item.genre}</div>
+                                        {item.rating && (
+                                            <div className="rating" style={{ display: 'inline-flex', marginTop: '4px', alignItems: 'center' }}>
+                                                <Star size={10} fill="#E23744" stroke="none" />
+                                                <span style={{ marginLeft: 4, fontWeight: 700, fontSize: '12px' }}>{item.rating}</span>
+                                                <span style={{ fontSize: '10px', marginLeft: 4, color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </Link>
                             ))}
@@ -108,7 +115,7 @@ const Movies = () => {
                         </div>
                     </div>
 
-                    <h2 className="section-title">Friends are Watching</h2>
+                    <h2 className="section-title">Friends Watched</h2>
                     <div className="movie-section">
                         <div className="movie-horizontal-list">
                             {friendWatches.map(item => (
@@ -146,7 +153,7 @@ const Movies = () => {
                             {item.rating && (
                                 <div className="rating" style={{ display: 'inline-flex', marginTop: '4px', alignItems: 'center' }}>
                                     <Star size={10} fill="#E23744" stroke="none" />
-                                    <span style={{ marginLeft: 4, fontWeight: 700, fontSize: '12px' }}>{item.rating}</span>
+                                    <span style={{ marginLeft: 4, fontWeight: 700, fontSize: '12px', color: '#E23744' }}>{item.rating}</span>
                                     <span style={{ fontSize: '10px', marginLeft: 4, color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
                                 </div>
                             )}

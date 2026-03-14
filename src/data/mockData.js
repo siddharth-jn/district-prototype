@@ -49,7 +49,7 @@ export const restaurants = [
         friendsActivity: [
             { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "The vibe was incredible.", date: 'Recently' },
             { userId: 'f7', name: 'Neha Gupta', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Great food but the wait time is brutal — even with a reservation we waited 35 mins. Worth it if you go on a weekday.", date: 'Recently' },
-            { userId: 'f9', name: 'Ananya Rao', avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "The food was solid but service is painfully slow on weekends — go on a weekday if you can.", date: 'Recently' }
+            { userId: 'f9', name: 'Ananya Rao', avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=150&auto=format&fit=crop', rating: 3, review: "The food was solid but service is painfully slow on weekends — go on a weekday if you can.", date: 'Recently' }
         ]
     },
     {
@@ -166,7 +166,7 @@ export const restaurants = [
         image: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2070&auto=format&fit=crop', location: 'Khar, Mumbai', distance: '1.8 km', description: 'Romantic Mediterranean hideaway.',
         friendsActivity: [
             { userId: 'f7', name: 'Neha Gupta', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Honestly a bit hyped. The signature dish was good, but not mind-blowing. Nice vibe though.", date: 'Recently' },
-            { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Worth a visit once, but I wouldn't go back at these prices. The portion sizes have shrunk.", date: 'Recently' }
+            { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 2.5, review: "Worth a visit once, but I wouldn't go back at these prices. The portion sizes have shrunk.", date: 'Recently' }
         ]
     },
     {
@@ -218,7 +218,7 @@ export const restaurants = [
         friendsActivity: [
             { userId: 'f2', name: 'Rohan Kapoor', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop', rating: 3.5, review: "The tasting menu is actually worth it here. Skip the à la carte — you miss the best dishes.", date: 'Recently' },
             { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "The vibe was incredible.", date: 'Recently' },
-            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Pasta was disappointing but the appetizers and desserts were fantastic. Uneven kitchen.", date: 'Recently' }
+            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Pasta was disappointing but the appetizers and desserts were fantastic. Uneven kitchen.", date: 'Recently' }
         ]
     },
     {
@@ -231,7 +231,7 @@ export const restaurants = [
         friendsActivity: [
             { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 3.5, review: "Go for the brunch, skip dinner. Much better value and the live music adds to it.", date: 'Recently' },
             { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "The vibe was incredible.", date: 'Recently' },
-            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 3.5, review: "Chef's special changes weekly and it's almost always the best thing on the table.", date: 'Recently' }
+            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Chef's special changes weekly and it's almost always the best thing on the table.", date: 'Recently' }
         ]
     },
     {
@@ -333,7 +333,7 @@ export const movies = [
         id: 'm1', title: 'Dune: Part Two', genre: 'Sci-Fi/Adventure', genres: ['sci_fi', 'action'], rating: 4.9, reviewsCount: '1.2k',
         image: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=2070&auto=format&fit=crop', duration: '2h 46m', language: 'English', format: 'IMAX 2D',
         newRelease: true, friendsActivity: [
-            { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Engaging for the most part but the second half really dragged. Be prepared for a long runtime.", date: 'Recently' }
+            { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Engaging for the most part but the second half really dragged. Be prepared for a long runtime.", date: 'Recently' }
         ]
     },
     {
@@ -348,7 +348,7 @@ export const movies = [
         id: 'm3', title: 'Kung Fu Panda 4', genre: 'Animation', genres: ['comedy', 'action'], rating: 4, reviewsCount: '1.2k',
         image: 'https://images.unsplash.com/photo-1533488765986-dfa2a9939acd?q=80&w=1974&auto=format&fit=crop', duration: '1h 34m', language: 'English', format: '3D',
         newRelease: true, friendsActivity: [
-            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Visually stunning but emotionally hollow. Looks great on IMAX but the story is thin.", date: 'Recently' }
+            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Visually stunning but emotionally hollow. Looks great on IMAX but the story is thin.", date: 'Recently' }
         ]
     },
 
@@ -529,7 +529,7 @@ export const events = [
         id: 'ev_fest_1', title: 'Kala Ghoda Arts Festival', date: '04-12 Feb', time: '10:00 AM', venue: 'Kala Ghoda', price: 'Free',
         image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=2032&auto=format&fit=crop', category: 'Fests & Fairs', type: 'fests_fairs', rating: 4.5, reviewsCount: '89', friendsActivity: [
             { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "Loved it!", date: 'Recently' },
-            { userId: 'f7', name: 'Neha Gupta', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Lovely outdoor seating but very overpriced. The risotto was bland for the price. Come for the ambiance, not the food.", date: 'Recently' },
+            { userId: 'f7', name: 'Neha Gupta', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Lovely outdoor seating but very overpriced. The risotto was bland for the price. Come for the ambiance, not the food.", date: 'Recently' },
             { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "The slow-cooked pork and the sol kadhi cocktail are must-orders. Skip the pasta, it's not their strong suit.", date: 'Recently' }
         ]
     },
@@ -659,7 +659,7 @@ export const stores = [
     {
         id: 'st_fw_1', title: 'Nike Factory Store', location: 'Linking Road', offer: 'Flat 40% Off',
         image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=2070&auto=format&fit=crop', type: 'footwear', category: 'Footwear', rating: 4.6, reviewsCount: '56', friendsActivity: [
-            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Great collection but genuinely overpriced — you can find the same brands cheaper online.", date: 'Recently' },
+            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Great collection but genuinely overpriced — you can find the same brands cheaper online.", date: 'Recently' },
             { userId: 'f10', name: 'Rahul Bose', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Staff is knowledgeable and not pushy, which is rare. Good browsing experience.", date: 'Recently' },
             { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "The store layout has improved a lot recently. Easy to navigate and find what you need.", date: 'Recently' }
         ]
@@ -675,7 +675,7 @@ export const stores = [
         id: 'st_sw_1', title: 'Envi Salon & Spa', location: 'Bandra West', offer: '20% Off Services',
         image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=1974&auto=format&fit=crop', type: 'salons_wellness', category: 'Salons & Wellness', rating: 4, reviewsCount: '870', friendsActivity: [
             { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "The vibe was incredible.", date: 'Recently' },
-            { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Window displays look better than what's actually inside. Misleading merchandising.", date: 'Recently' },
+            { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 2.5, review: "Window displays look better than what's actually inside. Misleading merchandising.", date: 'Recently' },
             { userId: 'f9', name: 'Ananya Rao', avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Much better online presence than in-store. The catalogue is larger on the website.", date: 'Recently' }
         ]
     },
@@ -683,7 +683,7 @@ export const stores = [
         id: 'st_jw_1', title: 'Tanishq', location: 'Andheri East', offer: '0% Making Charges',
         image: '/images/jewellery_store.png', type: 'jewellery', category: 'Jewellery', rating: 4.7, reviewsCount: '89', friendsActivity: [
             { userId: 'f10', name: 'Rahul Bose', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Surprise find — didn't expect this level of quality at this price point.", date: 'Recently' },
-            { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Great collection but genuinely overpriced — you can find the same brands cheaper online.", date: 'Recently' },
+            { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Great collection but genuinely overpriced — you can find the same brands cheaper online.", date: 'Recently' },
             { userId: 'f2', name: 'Rohan Kapoor', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Staff is knowledgeable and not pushy, which is rare. Good browsing experience.", date: 'Recently' }
         ]
     },
@@ -699,19 +699,19 @@ export const stores = [
         id: 'st_hf_1', title: 'Pepperfry Studio', location: 'Lower Parel', offer: 'Furniture up to 50% Off',
         image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?q=80&w=2070&auto=format&fit=crop', type: 'home_furniture', category: 'Home & Furniture', rating: 4.1, reviewsCount: '2.1k', friendsActivity: [
             { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "Return policy is flexible which is a huge plus. Had to exchange twice and it was painless.", date: 'Recently' },
-            { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Window displays look better than what's actually inside. Misleading merchandising.", date: 'Recently' }
+            { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 2.5, review: "Window displays look better than what's actually inside. Misleading merchandising.", date: 'Recently' }
         ]
     },
     { id: 'st_fw_2', title: 'Adidas Originals', location: 'Linking Road', offer: 'Buy 2 Get 1 Free', image: 'https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?q=80&w=2000&auto=format&fit=crop', type: 'footwear', category: 'Footwear', rating: 4.1, reviewsCount: '870', friendsActivity: [
             { userId: 'f5', name: 'Sana Khan', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Much better online presence than in-store. The catalogue is larger on the website.", date: 'Recently' },
             { userId: 'f9', name: 'Ananya Rao', avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=150&auto=format&fit=crop', rating: 3.5, review: "Surprise find — didn't expect this level of quality at this price point.", date: 'Recently' },
-            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "Great collection but genuinely overpriced — you can find the same brands cheaper online.", date: 'Recently' }
+            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Great collection but genuinely overpriced — you can find the same brands cheaper online.", date: 'Recently' }
         ] },
     { id: 'st_ap_2', title: 'H&M', location: 'High Street Phoenix', offer: 'Up to 50% Off', image: 'https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?q=80&w=2000&auto=format&fit=crop', type: 'apparel', category: 'Apparel', rating: 4.3, reviewsCount: '89', friendsActivity: [
             { userId: 'f5', name: 'Sana Khan', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Not bad, would go again.", date: 'Recently' }
         ] },
     { id: 'st_sw_2', title: 'Jean-Claude Biguine', location: 'Juhu', offer: 'Flat 15% Off Haircare', image: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=2000&auto=format&fit=crop', type: 'salons_wellness', category: 'Salons & Wellness', rating: 4.8, reviewsCount: '1.2k', friendsActivity: [
-            { userId: 'f7', name: 'Neha Gupta', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Enjoyable but slightly repetitive formula. Watch it for the comedy — don't go in expecting horror. The third act felt rushed.", date: 'Recently' },
+            { userId: 'f7', name: 'Neha Gupta', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Enjoyable but slightly repetitive formula. Watch it for the comedy — don't go in expecting horror. The third act felt rushed.", date: 'Recently' },
             { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 3.5, review: "Staff is knowledgeable and not pushy, which is rare. Good browsing experience.", date: 'Recently' }
         ] },
     { id: 'st_jw_2', title: 'Kalyan Jewellers', location: 'Vashi', offer: 'Free Gold Coin on Purchase', image: '/images/jewellery_store.png', type: 'jewellery', category: 'Jewellery', rating: 4.5, reviewsCount: '230', friendsActivity: [
@@ -720,12 +720,12 @@ export const stores = [
             { userId: 'f7', name: 'Neha Gupta', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Return policy is flexible which is a huge plus. Had to exchange twice and it was painless.", date: 'Recently' }
         ] },
     { id: 'st_bt_2', title: 'Sephora', location: 'Palladium Mall', offer: 'Free Makeover Session', image: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?q=80&w=2000&auto=format&fit=crop', type: 'beauty', category: 'Beauty', rating: 4, reviewsCount: '870', friendsActivity: [
-            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Window displays look better than what's actually inside. Misleading merchandising.", date: 'Recently' }
+            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 2.5, review: "Window displays look better than what's actually inside. Misleading merchandising.", date: 'Recently' }
         ] },
     { id: 'st_hf_2', title: 'IKEA', location: 'Navi Mumbai', offer: 'New Arrivals Collection', image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?q=80&w=2000&auto=format&fit=crop', type: 'home_furniture', category: 'Home & Furniture', rating: 4.4, reviewsCount: '2.1k', friendsActivity: [
             { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Much better online presence than in-store. The catalogue is larger on the website.", date: 'Recently' },
             { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Surprise find — didn't expect this level of quality at this price point.", date: 'Recently' },
-            { userId: 'f9', name: 'Ananya Rao', avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "Great collection but genuinely overpriced — you can find the same brands cheaper online.", date: 'Recently' }
+            { userId: 'f9', name: 'Ananya Rao', avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Great collection but genuinely overpriced — you can find the same brands cheaper online.", date: 'Recently' }
         ] }
 ];
 
@@ -746,7 +746,7 @@ export const activityCategories = [
 export const activities = [
     {
         id: 'act_gz_1', title: 'Smaaash', location: 'Kamala Mills', price: '₹1000 onwards',
-        image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071&auto=format&fit=crop', type: 'game_zones', category: 'Game Zones', rating: 4.1, reviewsCount: '89', friendsActivity: [
+        image: 'https://images.unsplash.com/photo-1556745753-b2904692b3cd?q=80&w=2071&auto=format&fit=crop', type: 'game_zones', category: 'Game Zones', rating: 4.1, reviewsCount: '89', friendsActivity: [
             { userId: 'f2', name: 'Rohan Kapoor', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "The vibe was incredible.", date: 'Recently' },
             { userId: 'f7', name: 'Neha Gupta', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=150&auto=format&fit=crop', rating: 3.5, review: "Really well run — safety briefing was thorough and the instructors were super patient.", date: 'Recently' }
         ]
@@ -755,47 +755,47 @@ export const activities = [
         id: 'act_tp_1', title: 'Imagicaa Theme Park', location: 'Khopoli', price: '₹1599 onwards',
         image: 'https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?q=80&w=2070&auto=format&fit=crop', type: 'theme_parks', category: 'Theme Parks', rating: 4.7, reviewsCount: '1.5k', friendsActivity: [
             { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "Morning slots are far better than evenings. Much less crowded and you get more time.", date: 'Recently' },
-            { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Good experience overall but the equipment could use an upgrade. Feels a bit dated.", date: 'Recently' },
+            { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Good experience overall but the equipment could use an upgrade. Feels a bit dated.", date: 'Recently' },
             { userId: 'f2', name: 'Rohan Kapoor', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Came with a group of 8 and it was a blast. The staff managed everyone really smoothly.", date: 'Recently' }
         ]
     },
     {
         id: 'act_wk_1', title: 'Pottery Workshop by Claying Thoughts', location: 'Khar', price: '₹1200',
         image: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=2070&auto=format&fit=crop', type: 'workshops', category: 'Workshops', rating: 4, reviewsCount: '950', friendsActivity: [
-            { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "A bit overpriced compared to similar places in the city but the location makes up for it.", date: 'Recently' }
+            { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 3, review: "A bit overpriced compared to similar places in the city but the location makes up for it.", date: 'Recently' }
         ]
     },
     {
         id: 'act_wp_1', title: 'Water Kingdom', location: 'Borivali West', price: '₹1300',
-        image: '/images/water_park.png', type: 'water_parks', category: 'Water Parks', rating: 4.4, reviewsCount: '56', friendsActivity: [
+        image: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=2000&auto=format&fit=crop', type: 'water_parks', category: 'Water Parks', rating: 4.4, reviewsCount: '56', friendsActivity: [
             { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Book at least a week in advance — slots fill up quickly on weekends.", date: 'Recently' },
-            { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Not as beginner-friendly as advertised. Felt rushed through the orientation.", date: 'Recently' }
+            { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Not as beginner-friendly as advertised. Felt rushed through the orientation.", date: 'Recently' }
         ]
     },
     {
         id: 'act_kp_1', title: 'KidZania Mumbai', location: 'R City Mall', price: '₹950',
-        image: 'https://images.unsplash.com/photo-1575444758702-4a6b9222336e?q=80&w=2070&auto=format&fit=crop', type: 'kids_play', category: 'Kids Play', rating: 4.1, reviewsCount: '1.5k', friendsActivity: [
+        image: 'https://images.unsplash.com/photo-1596461404969-9ce20c71c5ec?q=80&w=2070&auto=format&fit=crop', type: 'kids_play', category: 'Kids Play', rating: 4.1, reviewsCount: '1.5k', friendsActivity: [
             { userId: 'f10', name: 'Rahul Bose', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "Great for corporate team outings. They have proper packages for groups.", date: 'Recently' }
         ]
     },
     {
         id: 'act_gq_1', title: 'Mystery Rooms: Escape Room', location: 'Andheri Lokhandwala', price: '₹800',
-        image: 'https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?q=80&w=2029&auto=format&fit=crop', type: 'games_quizzes', category: 'Games & Quizzes', rating: 4, reviewsCount: '1.2k', friendsActivity: [
+        image: 'https://images.unsplash.com/photo-1591696205602-2f950c417cb9?q=80&w=2029&auto=format&fit=crop', type: 'games_quizzes', category: 'Games & Quizzes', rating: 4, reviewsCount: '1.2k', friendsActivity: [
             { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 3.5, review: "Really well run — safety briefing was thorough and the instructors were super patient.", date: 'Recently' }
         ]
     },
     {
         id: 'act_ms_1', title: 'Chhatrapati Shivaji Maharaj Vastu Sangrahalaya', location: 'Fort', price: '₹150',
-        image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1974&auto=format&fit=crop', type: 'museums', category: 'Museums', rating: 4.1, reviewsCount: '89', friendsActivity: [
+        image: 'https://images.unsplash.com/photo-1569930784843-d1bba34b5a87?q=80&w=1974&auto=format&fit=crop', type: 'museums', category: 'Museums', rating: 4.1, reviewsCount: '89', friendsActivity: [
             { userId: 'f10', name: 'Rahul Bose', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "The vibe was incredible.", date: 'Recently' }
         ]
     },
     {
         id: 'act_es_1', title: 'Zero Latency VR', location: 'Lower Parel', price: '₹1500',
-        image: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=2070&auto=format&fit=crop', type: 'e_sports', category: 'E Sports', rating: 4.3, reviewsCount: '450', friendsActivity: [
+        image: 'https://images.unsplash.com/photo-1617802690658-1173a812650d?q=80&w=2070&auto=format&fit=crop', type: 'e_sports', category: 'E Sports', rating: 4.3, reviewsCount: '450', friendsActivity: [
             { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Morning slots are far better than evenings. Much less crowded and you get more time.", date: 'Recently' },
             { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 3.5, review: "Not bad, would go again.", date: 'Recently' },
-            { userId: 'f5', name: 'Sana Khan', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Good experience overall but the equipment could use an upgrade. Feels a bit dated.", date: 'Recently' }
+            { userId: 'f5', name: 'Sana Khan', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Good experience overall but the equipment could use an upgrade. Feels a bit dated.", date: 'Recently' }
         ]
     },
     {
@@ -808,13 +808,13 @@ export const activities = [
         id: 'act_ft_1', title: 'Cult.fit Studio Group Class', location: 'Multiple Locations', price: '₹400',
         image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2070&auto=format&fit=crop', type: 'fitness', category: 'Fitness', rating: 4.3, reviewsCount: '56', friendsActivity: [
             { userId: 'f5', name: 'Sana Khan', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Came with a group of 8 and it was a blast. The staff managed everyone really smoothly.", date: 'Recently' },
-            { userId: 'f10', name: 'Rahul Bose', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "A bit overpriced compared to similar places in the city but the location makes up for it.", date: 'Recently' },
+            { userId: 'f10', name: 'Rahul Bose', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=150&auto=format&fit=crop', rating: 3, review: "A bit overpriced compared to similar places in the city but the location makes up for it.", date: 'Recently' },
             { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Not bad, would go again.", date: 'Recently' }
         ]
     },
     { id: 'act_gz_2', title: 'Timezone', location: 'Inorbit Mall Malad', price: '₹500 onwards', image: 'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?q=80&w=2000&auto=format&fit=crop', type: 'game_zones', category: 'Game Zones', rating: 4.1, reviewsCount: '950', friendsActivity: [
             { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Book at least a week in advance — slots fill up quickly on weekends.", date: 'Recently' },
-            { userId: 'f9', name: 'Ananya Rao', avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "Not as beginner-friendly as advertised. Felt rushed through the orientation.", date: 'Recently' }
+            { userId: 'f9', name: 'Ananya Rao', avatar: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Not as beginner-friendly as advertised. Felt rushed through the orientation.", date: 'Recently' }
         ] },
     { id: 'act_tp_2', title: 'EsselWorld', location: 'Gorai', price: '₹1050', image: 'https://images.unsplash.com/photo-1533560696582-8924bce63fb6?q=80&w=2000&auto=format&fit=crop', type: 'theme_parks', category: 'Theme Parks', rating: 4.9, reviewsCount: '870', friendsActivity: [
             { userId: 'f5', name: 'Sana Khan', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Great for corporate team outings. They have proper packages for groups.", date: 'Recently' }
@@ -824,13 +824,13 @@ export const activities = [
         ] },
     { id: 'act_wp_2', title: 'Wet N Joy', location: 'Lonavala', price: '₹1100', image: 'https://images.unsplash.com/photo-1588698188172-e555ed13cf3c?q=80&w=2000&auto=format&fit=crop', type: 'water_parks', category: 'Water Parks', rating: 4.4, reviewsCount: '950', friendsActivity: [
             { userId: 'f5', name: 'Sana Khan', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Morning slots are far better than evenings. Much less crowded and you get more time.", date: 'Recently' },
-            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Good experience overall but the equipment could use an upgrade. Feels a bit dated.", date: 'Recently' }
+            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Good experience overall but the equipment could use an upgrade. Feels a bit dated.", date: 'Recently' }
         ] },
     { id: 'act_kp_2', title: 'Fun City', location: 'Oberoi Mall', price: '₹500', image: 'https://images.unsplash.com/photo-1596461404969-9ce20c71c5ec?q=80&w=2000&auto=format&fit=crop', type: 'kids_play', category: 'Kids Play', rating: 4, reviewsCount: '950', friendsActivity: [
             { userId: 'f4', name: 'Amit Singh', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Came with a group of 8 and it was a blast. The staff managed everyone really smoothly.", date: 'Recently' }
         ] },
     { id: 'act_gq_2', title: 'Clue Hunt', location: 'Bandra West', price: '₹700', image: 'https://images.unsplash.com/photo-1511882150382-421056c89033?q=80&w=2000&auto=format&fit=crop', type: 'games_quizzes', category: 'Games & Quizzes', rating: 4, reviewsCount: '56', friendsActivity: [
-            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "A bit overpriced compared to similar places in the city but the location makes up for it.", date: 'Recently' },
+            { userId: 'f1', name: 'Aditi Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop', rating: 3, review: "A bit overpriced compared to similar places in the city but the location makes up for it.", date: 'Recently' },
             { userId: 'f2', name: 'Rohan Kapoor', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "The vibe was incredible.", date: 'Recently' }
         ] },
     { id: 'act_ms_2', title: 'Dr. Bhau Daji Lad Museum', location: 'Byculla', price: '₹100', image: 'https://images.unsplash.com/photo-1518998053401-b2543120986e?q=80&w=2000&auto=format&fit=crop', type: 'museums', category: 'Museums', rating: 4.2, reviewsCount: '342', friendsActivity: [
@@ -838,15 +838,15 @@ export const activities = [
         ] },
     { id: 'act_es_2', title: 'Microgravity Gaming', location: 'Juhu', price: '₹1200', image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2000&auto=format&fit=crop', type: 'e_sports', category: 'E Sports', rating: 4, reviewsCount: '89', friendsActivity: [
             { userId: 'f6', name: 'Vikram Desai', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150&auto=format&fit=crop', rating: 4.5, review: "Not bad, would go again.", date: 'Recently' },
-            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Not as beginner-friendly as advertised. Felt rushed through the orientation.", date: 'Recently' },
+            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Not as beginner-friendly as advertised. Felt rushed through the orientation.", date: 'Recently' },
             { userId: 'f5', name: 'Sana Khan', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', rating: 3.5, review: "Great for corporate team outings. They have proper packages for groups.", date: 'Recently' }
         ] },
     { id: 'act_ad_2', title: 'Hakone Go Karting', location: 'Powai', price: '₹400', image: 'https://images.unsplash.com/photo-1589133857321-7296b4bb5fba?q=80&w=2000&auto=format&fit=crop', type: 'adventure', category: 'Adventure', rating: 4.4, reviewsCount: '450', friendsActivity: [
             { userId: 'f3', name: 'Priya Verma', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "Really well run — safety briefing was thorough and the instructors were super patient.", date: 'Recently' },
             { userId: 'f5', name: 'Sana Khan', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=150&auto=format&fit=crop', rating: 4.0, review: "Morning slots are far better than evenings. Much less crowded and you get more time.", date: 'Recently' }
         ] },
-    { id: 'act_ft_2', title: 'Bounce Inc Trampoline', location: 'Malad', price: '₹900', image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2000&auto=format&fit=crop', type: 'fitness', category: 'Fitness', rating: 3.9, reviewsCount: '230', friendsActivity: [
-            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 5.0, review: "Good experience overall but the equipment could use an upgrade. Feels a bit dated.", date: 'Recently' }
+    { id: 'act_ft_2', title: 'Bounce Inc Trampoline', location: 'Malad', price: '₹900', image: 'https://images.unsplash.com/photo-1524594081293-190a2fe0baae?q=80&w=2000&auto=format&fit=crop', type: 'fitness', category: 'Fitness', rating: 3.9, reviewsCount: '230', friendsActivity: [
+            { userId: 'f8', name: 'Karan Patel', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop', rating: 3, review: "Good experience overall but the equipment could use an upgrade. Feels a bit dated.", date: 'Recently' }
         ] }
 ];
 

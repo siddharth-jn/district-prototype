@@ -172,7 +172,7 @@ const DetailView = () => {
                             <span className="meta-tag">{item.format}</span>
                             <div className="rating-row" style={{ marginLeft: 'auto' }}>
                                 <Star size={16} fill="#E23744" stroke="none" />
-                                <span style={{ fontWeight: 700, marginLeft: 4 }}>{item.rating}/10</span>
+                                <span style={{ fontWeight: 700, marginLeft: 4 }}>{item.rating}/5</span>
                                 <span className="review-count" style={{ marginLeft: 4 }}>({item.reviewsCount} votes)</span>
                             </div>
                         </div>
@@ -301,7 +301,7 @@ const DetailView = () => {
                                         transition: 'all 0.2s ease',
                                     }}
                                 >
-                                    👥 What Friends Say
+                                    👥 {type === 'dining' ? 'Friends Visited' : type === 'movies' ? 'Friends Watched' : 'What Friends Say'}
                                     {friendReviews.length > 0 && (
                                         <span style={{
                                             marginLeft: '6px',

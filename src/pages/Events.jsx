@@ -91,7 +91,9 @@ const Events = () => {
                     <Link to={`/events/${item.id}`} key={item.id} className="listing-card">
                         <div className="image-container">
                             <img src={item.image} alt={item.title} className="listing-image" />
-                            <div className="offer-tag" style={{ background: '#000' }}>{item.category}</div>
+                            <div className="offer-tag" style={{ background: 'var(--color-brand)', fontWeight: 700, fontSize: '11px' }}>
+                                {item.date}
+                            </div>
                         </div>
                         <div className="listing-content">
                             <div className="listing-header">
