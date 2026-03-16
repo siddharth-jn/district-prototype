@@ -53,8 +53,10 @@ const Header = () => {
             <div className="header-top">
                 <div className="location-selector">
                     <MapPin size={18} className="location-icon" />
-                    <span className="location-text">Mumbai</span>
-                    <span className="location-arrow">▼</span>
+                    <div>
+                        <span style={{ fontSize: 10, color: '#999', display: 'block', lineHeight: 1 }}>Your location</span>
+                        <span className="location-text" style={{ fontWeight: 700, fontSize: 14 }}>Andheri West, Mumbai</span>
+                    </div>
                 </div>
                 <div className="profile-actions">
                     <Link to="/notifications" className="icon-wrapper" style={{ textDecoration: 'none', color: 'inherit' }}>

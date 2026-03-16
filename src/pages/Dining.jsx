@@ -78,7 +78,12 @@ const Dining = () => {
                                         <Star size={8} fill="white" />
                                         <span style={{ fontSize: '8px', marginLeft: '2px', opacity: 0.8 }}>({item.reviewsCount})</span>
                                     </div>
-                                    <p className="mini-card-subtitle">{item.cuisine} • {item.price}</p>
+                                    <p className="mini-card-subtitle" style={{ fontWeight: 600, color: '#333' }}>{item.cuisine} • {item.priceForTwo || item.price}</p>
+                                    {item.distanceKm && (
+                                        <p style={{ fontSize: 10, color: '#888', margin: '4px 0 0 0', display: 'flex', alignItems: 'center', gap: 2 }}>
+                                            <MapPin size={10} style={{ opacity: 0.7 }} /> {item.distanceKm} km from Andheri West
+                                        </p>
+                                    )}
                                 </div>
                             </Link>
                         ))}
@@ -91,8 +96,13 @@ const Dining = () => {
                                 <img src={item.image} alt={item.name} className="mini-card-image" />
                                 <div className="mini-card-content">
                                     <div className="mini-card-title">{item.name}</div>
-                                    <p className="mini-card-subtitle">{item.location}</p>
-                                    <div className="friend-activity">
+                                    <p className="mini-card-subtitle" style={{ fontWeight: 600, color: '#333' }}>{item.cuisine} • {item.priceForTwo || item.price}</p>
+                                    {item.distanceKm && (
+                                        <p style={{ fontSize: 10, color: '#888', margin: '4px 0 4px 0', display: 'flex', alignItems: 'center', gap: 2 }}>
+                                            <MapPin size={10} style={{ opacity: 0.7 }} /> {item.distanceKm} km from Andheri West
+                                        </p>
+                                    )}
+                                    <div className="friend-activity" style={{ marginTop: '6px' }}>
                                         <div style={{ display: 'flex', marginRight: '6px' }}>
                                             {item.friendsActivity.slice(0, 3).map((f, i) => (
                                                 <img key={i} src={f.avatar} alt={f.name} className="friend-avatar" style={{ marginLeft: i > 0 ? '-8px' : 0, border: '2px solid white' }} />
@@ -132,15 +142,17 @@ const Dining = () => {
                                         <span style={{ fontSize: '10px', marginLeft: '4px', opacity: 0.8 }}>({item.reviewsCount})</span>
                                     </div>
                                 </div>
-                                <p className="listing-subtitle">{item.cuisine} • {item.price}</p>
+                                <p className="listing-subtitle" style={{ fontWeight: 600, color: '#333' }}>{item.cuisine} • {item.priceForTwo || item.price}</p>
                                 <div className="listing-footer">
                                     <div className="location">
+                                        <MapPin size={11} />
                                         <span className="location-text">{item.location}</span>
                                     </div>
-                                    <div className="distance">
-                                        <MapPin size={12} />
-                                        <span>{item.distance}</span>
-                                    </div>
+                                    {item.distanceKm && (
+                                        <div className="distance" style={{ fontSize: 11, color: '#888', display: 'flex', alignItems: 'center', gap: 3 }}>
+                                            <span>{item.distanceKm} km</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </Link>

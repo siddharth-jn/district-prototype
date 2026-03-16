@@ -198,7 +198,7 @@
 }
 
 .member-counter span {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
 }
 
@@ -325,20 +325,22 @@
     padding-left: 16px;
 }
 
-.timeline::before {
-    content: '';
-    position: absolute;
-    left: 23px;
-    top: 10px;
-    bottom: 0;
-    width: 2px;
-    background-color: var(--color-border);
-}
-
 .timeline-item {
     position: relative;
     margin-bottom: 32px;
     cursor: grab;
+}
+
+/* Localized connection line that bridges the gap to the next item instead of global bleed */
+.timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 24px;
+    bottom: -32px;
+    width: 2px;
+    background-color: var(--color-border);
+    z-index: 0;
 }
 
 .timeline-item:active {
@@ -426,16 +428,7 @@
     font-size: 13px;
     color: var(--color-dark-gray);
     font-weight: 500;
-}
-
-.travel-node::before {
-    content: '';
-    position: absolute;
-    left: 6px;
-    height: 100%;
-    width: 2px;
-    border-left: 2px dashed var(--color-border);
-    z-index: 1;
+    position: relative;
 }
 
 /* Checkout */

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { restaurants, movies, events, stores, activities, playFacilities } from '../data/mockData';
-import { ArrowLeft, Star, MapPin, Share2, Heart, Clock, Calendar, Users, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Share2, Heart, Clock, Calendar, Users, ShoppingBag, Ticket } from 'lucide-react';
 import '../styles/DetailView.css';
 
 // Pool of public reviewers with real Unsplash photos
@@ -183,9 +183,9 @@ const DetailView = () => {
                     {/* Common Header Info based on Type */}
                     {type === 'dining' && (
                         <>
-                            <p className="cuisine">{item.cuisine} • {item.price}</p>
+                            <p className="cuisine">{item.cuisine} • {item.priceForTwo || item.price}</p>
                             <p className="location-text"><MapPin size={16} /> {item.location}</p>
-                            <p className="open-status">Open now • 11am - 12am</p>
+                            <p className="open-status">Open now • 9:00 AM – 12:30 AM</p>
                             <div className="description-text">{item.description || "A wonderful dining experience with great ambiance."}</div>
                         </>
                     )}
@@ -220,6 +220,48 @@ const DetailView = () => {
                                 <h3>About the movie</h3>
                                 <p>Experience the epic conclusion to the saga. {item.title} brings action, drama, and stunning visuals to the big screen.</p>
                             </div>
+
+                            {/* Theatre Selector */}
+                            {item.theatres && item.theatres.length > 0 && (
+                                <div style={{ marginTop: 24 }}>
+                                    <h3 style={{ marginBottom: 12, fontSize: 16 }}>Select a Theatre</h3>
+                                    {item.theatres.map((theatre, idx) => (
+                                        <div key={idx} style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            padding: '14px 16px',
+                                            border: '1.5px solid #eee',
+                                            borderRadius: 12,
+                                            marginBottom: 10,
+                                            background: '#fafafa',
+                                        }}>
+                                            <div>
+                                                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 2 }}>{theatre.name}</div>
+                                                <div style={{ fontSize: 12, color: '#888', display: 'flex', gap: 8, alignItems: 'center' }}>
+                                                    <MapPin size={11} /> {theatre.distance} km away
+                                                    <span style={{ marginLeft: 4 }}>Starting ₹{theatre.startingPrice}</span>
+                                                </div>
+                                            </div>
+                                            <button style={{
+                                                background: 'var(--color-brand)',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: 20,
+                                                padding: '8px 16px',
+                                                fontSize: 12,
+                                                fontWeight: 700,
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 6,
+                                            }}>
+                                                <Ticket size={13} /> Book Tickets
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </>
                     )}
 
