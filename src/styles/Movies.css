@@ -1,149 +1,181 @@
+/* ── Movies Page ── */
 .movies-page {
-    padding-bottom: 80px;
+  padding-bottom: 80px;
+  background-color: var(--color-bg-light);
 }
 
-/* Round Genre Pills / Icons */
+/* ── Genre Icons ── */
 .genres-container {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    padding: 0 16px;
-    scrollbar-width: none;
-    margin-bottom: 24px;
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 0 var(--spacing-md);
+  scrollbar-width: none;
+  margin-bottom: var(--spacing-lg);
 }
 
 .genres-container::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .genre-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    min-width: 70px;
-    cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  min-width: 64px;
+  cursor: pointer;
 }
 
 .genre-icon-circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #F8F8F8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid transparent;
-    transition: all 0.2s;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background-color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--color-border);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-xs);
 }
 
 .genre-item.active .genre-icon-circle {
-    border-color: var(--color-brand);
-    background-color: #FFF0F1;
-    color: var(--color-brand);
+  border-color: var(--color-brand);
+  border-width: 2.5px;
+  background-color: var(--color-brand-light);
+  color: var(--color-brand);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
 }
 
 .genre-name {
-    font-size: 12px;
-    color: var(--color-dark-gray);
-    font-weight: 500;
+  font-size: 11.5px;
+  color: var(--color-gray);
+  font-weight: 500;
+  letter-spacing: 0.1px;
 }
 
-/* Language Chips - Reusing generic pill style if available, else defining here */
+.genre-item.active .genre-name {
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
+/* ── Language Chips ── */
 .languages-container {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding: 0 16px;
-    scrollbar-width: none;
-    margin-bottom: 24px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 var(--spacing-md);
+  scrollbar-width: none;
+  margin-bottom: var(--spacing-lg);
 }
 
 .languages-container::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .lang-chip {
-    padding: 6px 16px;
-    border: 1px solid var(--color-border);
-    border-radius: 20px;
-    font-size: 13px;
-    color: var(--color-dark-gray);
-    white-space: nowrap;
-    cursor: pointer;
-    background: white;
+  padding: 7px 16px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-dark-gray);
+  white-space: nowrap;
+  cursor: pointer;
+  background: var(--color-white);
+  transition: all var(--transition-fast);
+  letter-spacing: 0.1px;
 }
 
 .lang-chip.active {
-    background: var(--color-black);
-    color: white;
-    border-color: var(--color-black);
+  background: var(--color-black);
+  color: white;
+  border-color: var(--color-black);
+  font-weight: 600;
 }
 
-/* Movie Cards */
+/* ── Movie Sections ── */
 .movie-section {
-    margin-bottom: 32px;
+  margin-bottom: var(--spacing-xl);
 }
 
 .movie-horizontal-list {
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    padding: 0 16px;
-    scrollbar-width: none;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 0 var(--spacing-md);
+  scrollbar-width: none;
 }
 
 .movie-horizontal-list::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
+/* ── Movie Portrait Cards ── */
 .movie-card-portrait {
-    min-width: 140px;
-    width: 140px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    text-decoration: none;
-    color: inherit;
+  min-width: 190px;
+  width: 190px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.movie-card-portrait:active {
+  transform: scale(0.975);
 }
 
 .movie-poster {
-    width: 100%;
-    height: 210px;
-    border-radius: 12px;
-    object-fit: cover;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: 220px;
+  border-radius: 0;
+  object-fit: cover;
+  box-shadow: none;
+}
+
+.movie-info {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
 }
 
 .movie-title {
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.2;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.2px;
+  margin: 0;
 }
 
 .movie-genre {
-    font-size: 12px;
-    color: var(--color-gray);
+  font-size: 11px;
+  color: var(--color-gray);
+  margin: 3px 0 0;
 }
 
-/* Friend Activity in Movie Card */
+/* ── Friend Activity in Card ── */
 .movie-friend-activity {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 10px;
-    color: var(--color-dark-gray);
-    margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  color: var(--color-gray);
+  font-weight: 500;
 }
 
 .movie-friend-avatar {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid white;
 }

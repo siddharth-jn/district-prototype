@@ -1,381 +1,431 @@
+/* ── Detail View ── */
 .detail-view {
-    background-color: var(--color-white);
-    min-height: 100vh;
-    padding-bottom: 160px;
+  background-color: var(--color-white);
+  min-height: 100vh;
+  padding-bottom: 160px;
 }
 
+/* ── Hero Image ── */
 .detail-header-image-container {
-    position: relative;
-    height: 250px;
-    width: 100%;
+  position: relative;
+  height: 280px;
+  width: 100%;
+  overflow: hidden;
 }
 
 .detail-header-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .header-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    padding: var(--spacing-md);
-    display: flex;
-    justify-content: space-between;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 70%);
 }
 
 .back-btn,
 .icon-btn {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(4px);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  color: white;
+  transition: background var(--transition-fast);
+}
+
+.back-btn:active,
+.icon-btn:active {
+  background: rgba(0, 0, 0, 0.55);
 }
 
 .header-actions {
-    display: flex;
-    gap: var(--spacing-md);
+  display: flex;
+  gap: var(--spacing-sm);
 }
 
+/* ── Content Card ── */
 .detail-content {
-    position: relative;
-    top: -20px;
-    background-color: var(--color-white);
-    border-top-left-radius: var(--radius-xl);
-    border-top-right-radius: var(--radius-xl);
-    padding: var(--spacing-lg);
+  position: relative;
+  top: -24px;
+  background-color: var(--color-white);
+  border-top-left-radius: var(--radius-2xl);
+  border-top-right-radius: var(--radius-2xl);
+  padding: var(--spacing-xl) var(--spacing-md);
+  min-height: 60vh;
 }
 
+/* ── Title Section ── */
 .title-section {
-    margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
 }
 
 .detail-title {
-    font-size: var(--font-size-2xl);
-    font-weight: 800;
-    margin: 0 0 var(--spacing-xs) 0;
-    line-height: 1.2;
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  margin: 0 0 var(--spacing-sm) 0;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
 }
 
 .rating-row {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .rating-badge {
-    background-color: #267E3E;
-    color: white;
-    padding: 4px 8px;
-    border-radius: var(--radius-md);
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  color: var(--color-brand);
+  font-weight: 700;
+  font-size: var(--font-size-xs);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .review-count {
-    color: var(--color-gray);
-    font-size: var(--font-size-sm);
-    text-decoration: underline;
+  color: var(--color-gray);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
 }
 
+/* ── Info Section ── */
 .info-section p {
-    color: var(--color-dark-gray);
-    margin-bottom: var(--spacing-sm);
+  color: var(--color-dark-gray);
+  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-sm);
 }
 
 .cuisine,
 .genre {
-    color: var(--color-gray);
-    font-size: var(--font-size-base);
+  color: var(--color-gray);
+  font-size: var(--font-size-sm);
 }
 
 .location-text {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
 }
 
 .open-status {
-    color: #267E3E;
-    font-weight: 600;
-    font-size: var(--font-size-sm);
+  color: var(--color-success);
+  font-weight: 600;
+  font-size: var(--font-size-xs);
 }
 
+/* ── Offers ── */
 .offers-section {
-    margin-top: var(--spacing-lg);
-    background: #F5F7FA;
-    padding: var(--spacing-md);
-    border-radius: var(--radius-lg);
+  margin-top: var(--spacing-lg);
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-xl);
+  border: 1px solid #BFDBFE;
 }
 
 .offers-section h3 {
-    margin: 0 0 var(--spacing-md) 0;
-    font-size: var(--font-size-base);
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: #1D4ED8;
 }
 
 .offer-card-detail {
-    display: flex;
-    gap: var(--spacing-md);
-    align-items: center;
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
 }
 
 .offer-icon {
-    width: 30px;
-    height: 30px;
-    background: #256FEF;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
+  width: 32px;
+  height: 32px;
+  background: #1D4ED8;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.offer-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  background: #1D4ED8;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
 }
 
 .offer-title {
-    font-weight: 600;
-    font-size: var(--font-size-sm);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  color: var(--color-black);
 }
 
 .offer-desc {
-    color: var(--color-gray);
-    font-size: var(--font-size-xs);
+  color: var(--color-gray);
+  font-size: var(--font-size-xs);
+  margin-top: 2px;
 }
 
-/* Movie Specifics */
+/* ── Movie Meta Tags ── */
 .movie-meta-tags {
-    display: flex;
-    gap: var(--spacing-sm);
-    align-items: center;
-    margin-top: var(--spacing-sm);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: var(--spacing-sm);
+  flex-wrap: wrap;
 }
 
 .meta-tag {
-    background: var(--color-bg-light);
-    padding: 4px 12px;
-    border-radius: var(--radius-sm);
-    font-size: var(--font-size-xs);
-    font-weight: 600;
-    color: var(--color-block);
+  background: var(--color-bg-light);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-dark-gray);
+  border: 1px solid var(--color-border);
 }
 
+/* ── Plot / Description ── */
 .plot-summary {
-    margin-top: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
 }
 
 .plot-summary h3 {
-    font-size: var(--font-size-lg);
-    margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--spacing-sm);
+  letter-spacing: -0.3px;
 }
 
 .plot-summary p {
-    line-height: 1.5;
-    color: var(--color-gray);
+  line-height: 1.65;
+  color: var(--color-gray);
+  font-size: var(--font-size-sm);
 }
 
-/* Event Specifics */
+.description-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray);
+  line-height: 1.65;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ── Event Details ── */
 .event-date-row,
 .event-location-row {
-    display: flex;
-    gap: var(--spacing-md);
-    margin-bottom: var(--spacing-lg);
-    align-items: flex-start;
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  align-items: flex-start;
 }
 
 .brand-icon {
-    color: var(--color-brand);
-    margin-top: 2px;
+  color: var(--color-brand);
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
 .event-detail-date,
 .event-detail-venue {
-    font-weight: 700;
-    font-size: var(--font-size-base);
-    margin-bottom: 2px;
+  font-weight: 700;
+  font-size: var(--font-size-base);
+  margin-bottom: 2px;
+  letter-spacing: -0.2px;
 }
 
 .event-detail-time,
 .event-detail-address {
-    color: var(--color-gray);
-    font-size: var(--font-size-sm);
+  color: var(--color-gray);
+  font-size: var(--font-size-sm);
 }
 
+/* ── Price Section ── */
 .price-section {
-    margin-top: var(--spacing-xl);
-    border-top: 1px solid var(--color-border);
-    padding-top: var(--spacing-md);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  margin-top: var(--spacing-xl);
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .price-amount {
-    font-size: var(--font-size-xl);
-    font-weight: 800;
-    color: var(--color-black);
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-black);
+  letter-spacing: -0.4px;
 }
 
-/* Bottom Action Bar */
-.bottom-action-bar {
-    position: fixed;
-    bottom: 64px;
-    left: 0;
-    right: 0;
-    padding: var(--spacing-md);
-    background: var(--color-white);
-    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
-    z-index: 200;
-}
-
-.cta-btn {
-    width: 100%;
-    background-color: var(--color-brand);
-    color: white;
-    padding: var(--spacing-md);
-    border-radius: var(--radius-lg);
-    font-size: var(--font-size-lg);
-    font-weight: 700;
-    text-align: center;
-    transition: background-color 0.2s;
-}
-
-.cta-btn:active {
-    background-color: var(--color-brand-hover);
-}
-
-.description-text {
-    font-size: var(--font-size-sm);
-    color: var(--color-dark-gray);
-    line-height: 1.5;
-    margin-bottom: var(--spacing-lg);
-}
-
+/* ── Section Blocks ── */
 .section-block {
-    margin-top: var(--spacing-xl);
+  margin-top: var(--spacing-xl);
 }
 
 .section-block h3 {
-    font-size: var(--font-size-lg);
-    margin-bottom: var(--spacing-md);
-    color: var(--color-black);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-black);
+  letter-spacing: -0.3px;
 }
 
+/* ── Gallery / Menu Thumbnails ── */
 .horizontal-scroll-section {
-    display: flex;
-    gap: var(--spacing-md);
-    overflow-x: auto;
-    padding-bottom: var(--spacing-sm);
-    scrollbar-width: none;
+  display: flex;
+  gap: var(--spacing-sm);
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
 }
 
 .horizontal-scroll-section::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .menu-thumb,
 .gallery-thumb {
-    min-width: 120px;
-    height: 120px;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
+  min-width: 110px;
+  height: 110px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .menu-thumb img,
 .gallery-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
+/* ── Reviews ── */
 .reviews-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
 }
 
 .review-card {
-    background: #F9FAFB;
-    padding: var(--spacing-md);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
+  background: var(--color-bg-light);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
 }
 
 .review-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
 .reviewer-name {
-    font-weight: 600;
-    font-size: var(--font-size-sm);
+  font-weight: 700;
+  font-size: var(--font-size-sm);
+  letter-spacing: -0.1px;
 }
 
 .review-rating {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: #267E3E;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--color-brand);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .review-text {
-    font-size: var(--font-size-xs);
-    color: var(--color-gray);
-    line-height: 1.4;
-    margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-gray);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Bottom Action Bar ── */
+.bottom-action-bar {
+  position: fixed;
+  bottom: 64px;
+  left: 0;
+  right: 0;
+  padding: 12px var(--spacing-md);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--color-border);
+  z-index: 200;
+}
+
+.cta-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--color-brand) 0%, #3730A3 100%);
+  color: white;
+  padding: 15px var(--spacing-md);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.1px;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  display: block;
+  cursor: pointer;
+  border: none;
+  font-family: var(--font-family);
+}
+
+.cta-btn:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-brand);
 }
 
 .booking-action {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
 .booking-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .booking-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    color: var(--color-gray);
-    font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--color-gray);
+  font-weight: 700;
+  letter-spacing: 0.8px;
 }
 
 .booking-time {
-    font-size: var(--font-size-lg);
-    font-weight: 700;
-    color: var(--color-black);
-}
-
-/* Fix for offer icon wrapper if name changed */
-.offer-icon-wrapper {
-    width: 40px;
-    height: 40px;
-    background: #256FEF;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-    flex-shrink: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--color-black);
+  letter-spacing: -0.3px;
 }

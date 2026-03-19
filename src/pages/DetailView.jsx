@@ -109,12 +109,84 @@ function getPublicReviews(type, item) {
 }
 
 
+// Parse actual movie runtime in decimal hours (no extras added)
+const getActualDurationH = (movie) => {
+    if (!movie?.duration) return 2.25;
+    const hM = movie.duration.match(/(\d+)h/);
+    const mM = movie.duration.match(/(\d+)m/);
+    return (hM ? parseInt(hM[1]) : 0) + (mM ? parseInt(mM[1]) : 0) / 60;
+};
+
+// Showtimes: first at 9 AM, interval = actualH + 0.5h interval + 0.5h cleaning; stop before midnight
+const getShowtimes = (movie) => {
+    const slotInterval = getActualDurationH(movie) + 1.0;
+    const times = [];
+    let t = 9;
+    while (t < 24) { times.push(t); t += slotInterval; }
+    return times;
+};
+
+const fmtShowtime = (h) => {
+    let hrs = Math.floor(h) % 24;
+    let mins = Math.round((h - Math.floor(h)) * 60);
+    if (mins === 60) { hrs = (hrs + 1) % 24; mins = 0; }
+    const period = hrs >= 12 ? 'PM' : 'AM';
+    const displayH = hrs % 12 === 0 ? 12 : hrs % 12;
+    return `${displayH}:${String(mins).padStart(2, '0')} ${period}`;
+};
+
+// Deterministic sold-out: ~28% of movie showtimes per theatre
+const isShowtimeSoldOut = (movieId, theatreIdx, slotIdx) => {
+    const hash = movieId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+    return (hash * 31 + theatreIdx * 13 + slotIdx * 7) % 10 < 3;
+};
+
+// Play slot helpers
+const getPlaySlots = (facility) => {
+    const openH = parseInt(facility.openTime?.split(':')[0] ?? '5');
+    let closeH = parseInt(facility.closeTime?.split(':')[0] ?? '23');
+    if (closeH === 0) closeH = 24; // midnight
+    const slots = [];
+    for (let h = openH; h < closeH; h++) slots.push(h);
+    return slots;
+};
+
+const isPlaySlotUnavailable = (id, hour) => {
+    const hash = id.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+    return (hash * 31 + hour * 17) % 10 < 3;
+};
+
+const fmtHour = (h) => {
+    const n = h % 24;
+    const period = n >= 12 ? 'PM' : 'AM';
+    const display = n % 12 === 0 ? 12 : n % 12;
+    return `${display}:00 ${period}`;
+};
+
+const getPlayPrice = (priceStr, hours) => {
+    const num = parseInt((priceStr || '').replace(/[^0-9]/g, ''));
+    if (!num) return priceStr;
+    return `₹${(num * hours).toLocaleString()}`;
+};
+
 const DetailView = () => {
     const { type, id } = useParams();
     const navigate = useNavigate();
     const [item, setItem] = useState(null);
     const [publicReviews, setPublicReviews] = useState([]);
     const [reviewTab, setReviewTab] = useState('friends');
+    const [expandedTheatreIdx, setExpandedTheatreIdx] = useState(null);
+    const [selectedShowtime, setSelectedShowtime] = useState(null);
+    const [selectedPlaySlots, setSelectedPlaySlots] = useState([]);
+
+    const handlePlaySlotClick = (hour) => {
+        if (!item || isPlaySlotUnavailable(item.id, hour)) return;
+        setSelectedPlaySlots(prev =>
+            prev.includes(hour)
+                ? prev.filter(h => h !== hour)
+                : [...prev, hour].sort((a, b) => a - b)
+        );
+    };
 
     useEffect(() => {
         let foundItem;
@@ -159,10 +231,11 @@ const DetailView = () => {
 
                     {type !== 'movies' && (
                         <div className="rating-row">
-                            <div className="rating-badge">
-                                {item.rating} <Star size={10} fill="white" stroke="none" />
+                            <div style={{ display: 'inline-flex', marginTop: '4px', alignItems: 'center', gap: '3px' }}>
+                                <Star size={10} fill="#6366F1" stroke="none" />
+                                <span style={{ fontWeight: 700, fontSize: '12px', color: '#6366F1' }}>{item.rating}</span>
+                                <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
                             </div>
-                            <span className="review-count"> ({item.reviewsCount} reviews)</span>
                         </div>
                     )}
 
@@ -171,7 +244,7 @@ const DetailView = () => {
                             <span className="meta-tag">{item.language}</span>
                             <span className="meta-tag">{item.format}</span>
                             <div className="rating-row" style={{ marginLeft: 'auto' }}>
-                                <Star size={16} fill="#E23744" stroke="none" />
+                                <Star size={16} fill="#6366F1" stroke="none" />
                                 <span style={{ fontWeight: 700, marginLeft: 4 }}>{item.rating}/5</span>
                                 <span className="review-count" style={{ marginLeft: 4 }}>({item.reviewsCount} votes)</span>
                             </div>
@@ -192,8 +265,11 @@ const DetailView = () => {
                     {(type === 'stores' || type === 'activities' || type === 'play') && (
                         <>
                             <p className="cuisine">{item.category} • {item.offer || item.price}</p>
-                            <p className="location-text"><MapPin size={16} /> {item.location}</p>
-                            <p className="open-status">Open now • 10am - 10pm</p>
+                            <p className="location-text">
+                                <MapPin size={16} /> {item.location}
+                                {item.distanceKm && <span style={{ marginLeft: 8, color: '#888', fontSize: 12 }}>· {item.distanceKm} km from Andheri West</span>}
+                            </p>
+                            <p className="open-status">Open now • {type === 'play' ? '5am' : '10am'} - {type === 'play' ? '12am' : '10pm'}</p>
                             <div className="description-text">
                                 {item.description || `Experience the best of ${item.category} right in the heart of the city. Highly recommended by locals.`}
                             </div>
@@ -213,6 +289,65 @@ const DetailView = () => {
                         </div>
                     )}
 
+                    {type === 'play' && (
+                        <div style={{ marginTop: 24 }}>
+                            <h3 style={{ fontSize: 16, marginBottom: 4 }}>Select Your Slot</h3>
+                            <p style={{ fontSize: 12, color: '#888', margin: '0 0 14px' }}>
+                                Tap to select. For 2+ hours, pick consecutive slots. <span style={{ color: '#bbb' }}>Strikethrough = booked.</span>
+                            </p>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                {getPlaySlots(item).map((hour) => {
+                                    const unavailable = isPlaySlotUnavailable(item.id, hour);
+                                    const selected = selectedPlaySlots.includes(hour);
+                                    return (
+                                        <button
+                                            key={hour}
+                                            onClick={() => handlePlaySlotClick(hour)}
+                                            disabled={unavailable}
+                                            style={{
+                                                padding: '7px 13px',
+                                                borderRadius: 20,
+                                                fontSize: 13,
+                                                fontWeight: 600,
+                                                cursor: unavailable ? 'not-allowed' : 'pointer',
+                                                border: selected ? 'none' : '1.5px solid #ddd',
+                                                background: selected ? 'var(--color-brand)' : unavailable ? '#f0f0f0' : '#f5f5f5',
+                                                color: selected ? 'white' : unavailable ? '#bbb' : '#333',
+                                                textDecoration: unavailable ? 'line-through' : 'none',
+                                            }}
+                                        >
+                                            {fmtHour(hour)}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                            {selectedPlaySlots.length > 0 && (() => {
+                                const isConsecutive = selectedPlaySlots.every((h, i) => i === 0 || h === selectedPlaySlots[i - 1] + 1);
+                                const timeDisplay = isConsecutive
+                                    ? `${fmtHour(selectedPlaySlots[0])} – ${fmtHour(selectedPlaySlots[selectedPlaySlots.length - 1] + 1)}`
+                                    : selectedPlaySlots.map(fmtHour).join(', ');
+                                return (
+                                    <>
+                                        <div style={{ marginTop: 14, padding: '12px 16px', background: 'var(--color-brand-light)', borderRadius: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                            <div>
+                                                <div style={{ fontWeight: 700, fontSize: 14 }}>
+                                                    {selectedPlaySlots.length} hr{selectedPlaySlots.length > 1 ? 's' : ''}
+                                                </div>
+                                                <div style={{ fontSize: 12, color: '#666', marginTop: 3, lineHeight: 1.4 }}>{timeDisplay}</div>
+                                            </div>
+                                            <div style={{ fontWeight: 800, fontSize: 16, color: 'var(--color-brand)' }}>
+                                                {getPlayPrice(item.price, selectedPlaySlots.length)}
+                                            </div>
+                                        </div>
+                                        <button style={{ marginTop: 10, width: '100%', padding: 14, borderRadius: 14, border: 'none', background: 'var(--color-brand)', color: 'white', fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>
+                                            Book {selectedPlaySlots.length} Hour{selectedPlaySlots.length > 1 ? 's' : ''}
+                                        </button>
+                                    </>
+                                );
+                            })()}
+                        </div>
+                    )}
+
                     {type === 'movies' && (
                         <>
                             <p className="genre">{item.genre} • {item.duration || '2h 15m'}</p>
@@ -221,43 +356,72 @@ const DetailView = () => {
                                 <p>Experience the epic conclusion to the saga. {item.title} brings action, drama, and stunning visuals to the big screen.</p>
                             </div>
 
-                            {/* Theatre Selector */}
+                            {/* Theatre Selector with Showtime Picker */}
                             {item.theatres && item.theatres.length > 0 && (
                                 <div style={{ marginTop: 24 }}>
                                     <h3 style={{ marginBottom: 12, fontSize: 16 }}>Select a Theatre</h3>
                                     {item.theatres.map((theatre, idx) => (
-                                        <div key={idx} style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                            padding: '14px 16px',
-                                            border: '1.5px solid #eee',
-                                            borderRadius: 12,
-                                            marginBottom: 10,
-                                            background: '#fafafa',
-                                        }}>
-                                            <div>
-                                                <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 2 }}>{theatre.name}</div>
-                                                <div style={{ fontSize: 12, color: '#888', display: 'flex', gap: 8, alignItems: 'center' }}>
-                                                    <MapPin size={11} /> {theatre.distance} km away
-                                                    <span style={{ marginLeft: 4 }}>Starting ₹{theatre.startingPrice}</span>
+                                        <div key={idx} style={{ border: '1.5px solid #eee', borderRadius: 12, marginBottom: 10, overflow: 'hidden' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', background: '#fafafa' }}>
+                                                <div>
+                                                    <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 2 }}>{theatre.name}</div>
+                                                    <div style={{ fontSize: 12, color: '#888', display: 'flex', gap: 6, alignItems: 'center' }}>
+                                                        <MapPin size={11} /> {theatre.distance} km away
+                                                        <span>· Starting ₹{theatre.startingPrice}</span>
+                                                    </div>
                                                 </div>
+                                                <button
+                                                    onClick={() => {
+                                                        setExpandedTheatreIdx(idx === expandedTheatreIdx ? null : idx);
+                                                        setSelectedShowtime(null);
+                                                    }}
+                                                    style={{ background: 'var(--color-brand)', color: 'white', border: 'none', borderRadius: 20, padding: '8px 16px', fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                                                >
+                                                    <Ticket size={13} /> Book Tickets
+                                                </button>
                                             </div>
-                                            <button style={{
-                                                background: 'var(--color-brand)',
-                                                color: 'white',
-                                                border: 'none',
-                                                borderRadius: 20,
-                                                padding: '8px 16px',
-                                                fontSize: 12,
-                                                fontWeight: 700,
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: 6,
-                                            }}>
-                                                <Ticket size={13} /> Book Tickets
-                                            </button>
+
+                                            {expandedTheatreIdx === idx && (
+                                                <div style={{ padding: '12px 16px 16px', borderTop: '1px solid #eee', background: '#fff' }}>
+                                                    <p style={{ fontSize: 12, color: '#888', margin: '0 0 10px' }}>
+                                                        Select a showtime: <span style={{ color: '#bbb' }}>Strikethrough = sold out.</span>
+                                                    </p>
+                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                                                        {getShowtimes(item).map((t, si) => {
+                                                            const soldOut = isShowtimeSoldOut(item.id, idx, si);
+                                                            const selected = selectedShowtime === t && expandedTheatreIdx === idx;
+                                                            return (
+                                                                <button
+                                                                    key={si}
+                                                                    onClick={() => !soldOut && setSelectedShowtime(selected ? null : t)}
+                                                                    disabled={soldOut}
+                                                                    style={{
+                                                                        padding: '6px 14px', borderRadius: 20, fontSize: 13, fontWeight: 600,
+                                                                        cursor: soldOut ? 'not-allowed' : 'pointer',
+                                                                        border: selected ? 'none' : '1.5px solid #ddd',
+                                                                        background: selected ? 'var(--color-brand)' : soldOut ? '#f0f0f0' : '#f5f5f5',
+                                                                        color: selected ? 'white' : soldOut ? '#bbb' : '#333',
+                                                                        textDecoration: soldOut ? 'line-through' : 'none',
+                                                                    }}
+                                                                >
+                                                                    {fmtShowtime(t)}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                    <button
+                                                        disabled={!selectedShowtime}
+                                                        style={{
+                                                            marginTop: 12, width: '100%', padding: 12, borderRadius: 12, border: 'none',
+                                                            fontWeight: 700, fontSize: 14,
+                                                            background: selectedShowtime ? 'var(--color-brand)' : '#e0e0e0',
+                                                            color: selectedShowtime ? 'white' : '#aaa',
+                                                            cursor: selectedShowtime ? 'pointer' : 'default',
+                                                        }}>
+                                                        {selectedShowtime ? `Book for ${fmtShowtime(selectedShowtime)}` : 'Select a showtime first'}
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
                                 </div>
@@ -278,7 +442,10 @@ const DetailView = () => {
                                 <MapPin size={20} className="brand-icon" />
                                 <div>
                                     <div className="event-detail-venue">{item.venue}</div>
-                                    <div className="event-detail-address">Mumbai, Maharashtra</div>
+                                    <div className="event-detail-address">
+                                        Mumbai, Maharashtra
+                                        {item.distanceKm && <span style={{ marginLeft: 8, color: '#888', fontSize: 12 }}>· {item.distanceKm} km from Andheri West</span>}
+                                    </div>
                                 </div>
                             </div>
                             <div className="plot-summary">
@@ -373,8 +540,8 @@ const DetailView = () => {
                                                         <span style={{ fontSize: '11px', color: '#888' }}>{rev.date || 'Recently'}</span>
                                                     </div>
                                                 </div>
-                                                <span className="review-rating" style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                                                    {rev.rating} <Star size={10} fill="white" />
+                                                <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                                                    <Star size={10} fill="#6366F1" stroke="none" /> {rev.rating}
                                                 </span>
                                             </div>
                                             <p className="review-text" style={{ marginTop: '10px', lineHeight: '1.4' }}>{rev.review}</p>
@@ -398,8 +565,8 @@ const DetailView = () => {
                                                         <span style={{ fontSize: '11px', color: '#888' }}>{rev.date || 'Recently'}</span>
                                                     </div>
                                                 </div>
-                                                <span className="review-rating" style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                                                    {rev.rating} <Star size={10} fill="white" />
+                                                <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                                                    <Star size={10} fill="#6366F1" stroke="none" /> {rev.rating}
                                                 </span>
                                             </div>
                                             <p className="review-text" style={{ marginTop: '10px', lineHeight: '1.4' }}>{rev.text}</p>
@@ -418,19 +585,17 @@ const DetailView = () => {
                 </div>
             </div>
 
-            <div className="bottom-action-bar">
-                {type === 'dining' ? (
-                    <button className="cta-btn">Book Table</button>
-                ) : type === 'movies' ? (
-                    <button className="cta-btn">Book Tickets</button>
-                ) : type === 'events' ? (
-                    <button className="cta-btn">Book Tickets Now</button>
-                ) : type === 'play' ? (
-                    <button className="cta-btn">Book Court / Turf</button>
-                ) : (
-                    <button className="cta-btn">Book Now</button>
-                )}
-            </div>
+            {type !== 'movies' && type !== 'play' && (
+                <div className="bottom-action-bar">
+                    {type === 'dining' ? (
+                        <button className="cta-btn">Book Table</button>
+                    ) : type === 'events' ? (
+                        <button className="cta-btn">Book Tickets Now</button>
+                    ) : (
+                        <button className="cta-btn">Book Now</button>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

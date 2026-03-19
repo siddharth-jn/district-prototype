@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Check, Users2, Sparkles, Clock, MapPin, Wallet, Coffee, Sun, Moon, Dumbbell } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { ArrowLeft, Check, Users2, Sparkles, MapPin, Wallet, Dumbbell } from 'lucide-react';
 import {
-    cuisines, diningMoods, movieGenres, eventTypes,
+    cuisines, diningMoods, movieGenres, movieLanguages, eventTypes,
     storeTypes, activityCategories, sportServices
 } from '../../data/mockData';
 import '../../styles/Planner.css';
 
-const PillSelector = ({ options, selected, onChange, labelKey = 'name', valKey = 'id' }) => {
-    const toggle = (val) => {
-        if (selected.includes(val)) onChange(selected.filter(i => i !== val));
-        else onChange([...selected, val]);
-    };
+// Multi-select pill: clicking toggles membership in the selected array
+const MultiPillSelector = ({ options, selected = [], onChange, labelKey = 'name', valKey = 'id' }) => {
+    const toggle = (val) => onChange(
+        selected.includes(val) ? selected.filter(v => v !== val) : [...selected, val]
+    );
     return (
         <div className="pill-group">
             {options.map(opt => (
@@ -27,48 +27,61 @@ const PillSelector = ({ options, selected, onChange, labelKey = 'name', valKey =
     );
 };
 
-// Breakfast rule: South Indian → cafe + romantic + family + fine_dining moods
-//                Continental  → cafe mood ONLY
+// Hardcoded day bounds — full day window, no user input needed
+const DEFAULT_DAY_START = '6:00 AM';
+const DEFAULT_DAY_END   = '4:00 AM';
+
+// Breakfast rules
 const BREAKFAST_CUISINES = ['south_indian', 'continental'];
 const BREAKFAST_MOODS_SOUTH_INDIAN = ['cafes', 'romantic', 'family', 'fine_dining'];
 const BREAKFAST_MOODS_CONTINENTAL = ['cafes'];
 const LUNCH_EXCLUDED_MOODS = ['nightlife'];
 
-const TIME_OPTIONS = ['7:00 AM','8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM',
-    '1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM',
-    '7:00 PM','8:00 PM','9:00 PM','10:00 PM','11:00 PM','12:00 AM'];
 
-const SectionCard = ({ title, icon, children }) => (
+const SectionCard = ({ title, children }) => (
     <div className="planner-section">
-        <div className="section-title-wrapper" style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-            {icon}
+        <div className="section-title-wrapper" style={{ marginBottom: 16 }}>
             <h3 style={{ margin: 0 }}>{title}</h3>
         </div>
         <div className="section-content">{children}</div>
     </div>
 );
 
+// Compute allowed breakfast mood IDs for a set of selected cuisines
+const computeAllowedBreakfastMoodIds = (selectedCuisines) => {
+    const allowed = new Set();
+    if (selectedCuisines.includes('continental')) BREAKFAST_MOODS_CONTINENTAL.forEach(x => allowed.add(x));
+    if (selectedCuisines.some(c => c !== 'continental')) BREAKFAST_MOODS_SOUTH_INDIAN.forEach(x => allowed.add(x));
+    if (selectedCuisines.length === 0) BREAKFAST_MOODS_SOUTH_INDIAN.forEach(x => allowed.add(x));
+    return [...allowed];
+};
+
 const PlannerSetup = () => {
     const navigate = useNavigate();
-    const [diningTab, setDiningTab] = useState('breakfast'); // breakfast | lunch | dinner
+    const location = useLocation();
+    const savedPrefs = location.state?.preferences;
 
-    const [prefs, setPrefs] = useState({
+    const [diningTab, setDiningTab] = useState(
+        savedPrefs?.dining?.dinner?.cuisines?.length ? 'dinner'
+        : savedPrefs?.dining?.lunch?.cuisines?.length ? 'lunch'
+        : 'breakfast'
+    );
+
+    const [prefs, setPrefs] = useState(savedPrefs || {
         dining: {
             breakfast: { cuisines: [], moods: [] },
             lunch: { cuisines: [], moods: [] },
             dinner: { cuisines: [], moods: [] },
         },
-        movies: { genres: [] },
+        movies: { genres: [], languages: [] },
         events: { types: [] },
         stores: { types: [] },
         activities: { types: [] },
         play: { types: [], hours: 1 },
         memberCount: 2,
-        budget: '5000',
-        dayStart: '10:00 AM',
-        dayEnd: '10:00 PM',
         travelRadius: 10,
-        prioritization: 'district_top_picks', // 'district_top_picks', 'friends_network', 'budget_friendly'
+        prioritization: 'district_top_picks',
+        attempt: 0,
     });
 
     const updateDining = (meal, field, value) => {
@@ -84,29 +97,25 @@ const PlannerSetup = () => {
     const update = (field, value) => setPrefs(prev => ({ ...prev, [field]: value }));
 
     const generatePlan = () => {
-        navigate('/planner/results', { state: { preferences: prefs } });
+        // Always reset attempt to 0; inject hardcoded day bounds
+        navigate('/planner/results', {
+            state: { preferences: { ...prefs, dayStart: DEFAULT_DAY_START, dayEnd: DEFAULT_DAY_END, attempt: 0 } }
+        });
     };
 
-    // Compute mood options based on active dining tab
+    // Breakfast: available cuisines limited to south_indian + continental
+    const breakfastCuisines = cuisines.filter(c => BREAKFAST_CUISINES.includes(c.id));
+
+    // Breakfast moods: union of allowed moods for all currently-selected breakfast cuisines
     const breakfastMoods = diningMoods.filter(m => {
-        const hasSouthIndian = prefs.dining.breakfast.cuisines.includes('south_indian');
-        const hasContinental = prefs.dining.breakfast.cuisines.includes('continental');
-        if (!hasSouthIndian && !hasContinental) {
-            // Show all breakfast-compatible moods
-            return [...BREAKFAST_MOODS_SOUTH_INDIAN].includes(m.id);
-        }
-        if (hasSouthIndian && hasContinental) {
-            return BREAKFAST_MOODS_SOUTH_INDIAN.includes(m.id);
-        }
-        if (hasContinental && !hasSouthIndian) return BREAKFAST_MOODS_CONTINENTAL.includes(m.id);
-        return BREAKFAST_MOODS_SOUTH_INDIAN.includes(m.id);
+        const allowedIds = computeAllowedBreakfastMoodIds(prefs.dining.breakfast.cuisines);
+        return allowedIds.includes(m.id);
     });
     const lunchMoods = diningMoods.filter(m => !LUNCH_EXCLUDED_MOODS.includes(m.id));
     const dinnerMoods = diningMoods;
-    const breakfastCuisines = cuisines.filter(c => BREAKFAST_CUISINES.includes(c.id));
 
-    const activeMoods = diningTab === 'breakfast' ? breakfastMoods : diningTab === 'lunch' ? lunchMoods : dinnerMoods;
     const activeCuisines = diningTab === 'breakfast' ? breakfastCuisines : cuisines;
+    const activeMoods = diningTab === 'breakfast' ? breakfastMoods : diningTab === 'lunch' ? lunchMoods : dinnerMoods;
 
     return (
         <div className="planner-page">
@@ -123,64 +132,20 @@ const PlannerSetup = () => {
                     Tell us what you're in the mood for across District, and we'll craft the perfect itinerary.
                 </p>
 
-                {/* ── Day Timing ── */}
-                <SectionCard title="When's your day?" icon={<Clock size={20} color="var(--color-brand)" />}>
-                    <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                        <div className="form-group" style={{ flex: 1, minWidth: 140 }}>
-                            <label>Day Starts</label>
-                            <select
-                                className="planner-select"
-                                value={prefs.dayStart}
-                                onChange={e => update('dayStart', e.target.value)}
-                            >
-                                {TIME_OPTIONS.map(t => <option key={t}>{t}</option>)}
-                            </select>
-                        </div>
-                        <div className="form-group" style={{ flex: 1, minWidth: 140 }}>
-                            <label>Day Ends</label>
-                            <select
-                                className="planner-select"
-                                value={prefs.dayEnd}
-                                onChange={e => update('dayEnd', e.target.value)}
-                            >
-                                {TIME_OPTIONS.map(t => <option key={t}>{t}</option>)}
-                            </select>
-                        </div>
-                    </div>
-                </SectionCard>
-
-                {/* ── Group Size + Budget ── */}
-                <SectionCard title="Group & Budget" icon={<Wallet size={20} color="var(--color-brand)" />}>
+                {/* ── Group Size ── */}
+                <SectionCard title="Group Size">
                     <div className="form-group">
-                        <label>Group Size</label>
+                        <label>How many people?</label>
                         <div className="member-counter">
                             <button onClick={() => update('memberCount', Math.max(1, prefs.memberCount - 1))}>-</button>
                             <span>{prefs.memberCount} {prefs.memberCount === 1 ? 'person' : 'people'}</span>
                             <button onClick={() => update('memberCount', prefs.memberCount + 1)}>+</button>
                         </div>
                     </div>
-                    <div className="form-group">
-                        <label>Total Budget (per person, optional)</label>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <span style={{ fontSize: 18, fontWeight: 700 }}>₹</span>
-                            <input
-                                type="number"
-                                className="planner-input"
-                                placeholder="e.g. 2000"
-                                value={prefs.budget}
-                                onChange={e => update('budget', e.target.value)}
-                            />
-                        </div>
-                        {prefs.budget && (
-                            <p style={{ fontSize: 12, color: '#888', marginTop: 4 }}>
-                                Estimated group budget: ₹{(parseInt(prefs.budget) * prefs.memberCount).toLocaleString()}
-                            </p>
-                        )}
-                    </div>
                 </SectionCard>
 
                 {/* ── Travel Radius ── */}
-                <SectionCard title="Travel Radius" icon={<MapPin size={20} color="var(--color-brand)" />}>
+                <SectionCard title="Travel Radius">
                     <p style={{ fontSize: 13, color: '#888', marginBottom: 12 }}>
                         📍 From <strong>Andheri West, Mumbai</strong>
                     </p>
@@ -203,13 +168,12 @@ const PlannerSetup = () => {
                 </SectionCard>
 
                 {/* ── Dining ── */}
-                <SectionCard title="Dining" icon={null}>
-                    {/* Breakfast / Lunch / Dinner Tabs */}
+                <SectionCard title="Dining">
                     <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
                         {[
-                            { id: 'breakfast', label: '☀️ Breakfast', icon: Coffee },
-                            { id: 'lunch', label: '🌤 Lunch', icon: Sun },
-                            { id: 'dinner', label: '🌙 Dinner', icon: Moon },
+                            { id: 'breakfast', label: '☀️ Breakfast' },
+                            { id: 'lunch',     label: '🌤 Lunch' },
+                            { id: 'dinner',    label: '🌙 Dinner' },
                         ].map(tab => (
                             <button
                                 key={tab.id}
@@ -239,67 +203,83 @@ const PlannerSetup = () => {
                     )}
 
                     <div className="form-group">
-                        <label>Cuisines</label>
-                        <PillSelector
+                        <label>Cuisine</label>
+                        <MultiPillSelector
                             options={activeCuisines}
                             selected={prefs.dining[diningTab].cuisines}
-                            onChange={val => updateDining(diningTab, 'cuisines', val)}
+                            onChange={vals => {
+                                updateDining(diningTab, 'cuisines', vals);
+                                // For breakfast: remove moods that are no longer valid
+                                if (diningTab === 'breakfast') {
+                                    const allowedIds = computeAllowedBreakfastMoodIds(vals);
+                                    const filteredMoods = prefs.dining.breakfast.moods.filter(m => allowedIds.includes(m));
+                                    updateDining('breakfast', 'moods', filteredMoods);
+                                }
+                            }}
                         />
                     </div>
                     <div className="form-group">
                         <label>Vibe / Mood</label>
-                        <PillSelector
+                        <MultiPillSelector
                             options={activeMoods}
                             selected={prefs.dining[diningTab].moods}
-                            onChange={val => updateDining(diningTab, 'moods', val)}
+                            onChange={vals => updateDining(diningTab, 'moods', vals)}
                         />
                     </div>
                 </SectionCard>
 
                 {/* ── Movies ── */}
-                <SectionCard title="Movies" icon={null}>
+                <SectionCard title="Movies">
                     <div className="form-group">
-                        <label>Preferred Genres</label>
-                        <PillSelector
+                        <label>Genre</label>
+                        <MultiPillSelector
                             options={movieGenres}
                             selected={prefs.movies.genres}
-                            onChange={val => update('movies', { ...prefs.movies, genres: val })}
+                            onChange={vals => update('movies', { ...prefs.movies, genres: vals })}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Language</label>
+                        <MultiPillSelector
+                            options={movieLanguages}
+                            selected={prefs.movies.languages}
+                            onChange={vals => update('movies', { ...prefs.movies, languages: vals })}
                         />
                     </div>
                 </SectionCard>
 
                 {/* ── Live Events ── */}
-                <SectionCard title="Live Events" icon={null}>
+                <SectionCard title="Live Events">
                     <div className="form-group">
-                        <label>Event Types</label>
-                        <PillSelector
+                        <label>Event Type</label>
+                        <MultiPillSelector
                             options={eventTypes}
                             selected={prefs.events.types}
-                            onChange={val => update('events', { ...prefs.events, types: val })}
+                            onChange={vals => update('events', { ...prefs.events, types: vals })}
                         />
                     </div>
                 </SectionCard>
 
                 {/* ── Activities ── */}
-                <SectionCard title="Activities" icon={null}>
+                <SectionCard title="Activities">
                     <div className="form-group">
-                        <label>Activity Types</label>
-                        <PillSelector
+                        <label>Activity Type</label>
+                        <MultiPillSelector
                             options={activityCategories}
                             selected={prefs.activities.types}
-                            onChange={val => update('activities', { ...prefs.activities, types: val })}
+                            onChange={vals => update('activities', { ...prefs.activities, types: vals })}
                         />
                     </div>
                 </SectionCard>
 
                 {/* ── Play ── */}
-                <SectionCard title="Play" icon={<Dumbbell size={20} color="var(--color-brand)" />}>
+                <SectionCard title="Play">
                     <div className="form-group">
-                        <label>Sports</label>
-                        <PillSelector
+                        <label>Sport</label>
+                        <MultiPillSelector
                             options={sportServices}
                             selected={prefs.play.types}
-                            onChange={val => update('play', { ...prefs.play, types: val })}
+                            onChange={vals => update('play', { ...prefs.play, types: vals })}
                         />
                     </div>
                     <div className="form-group">
@@ -313,60 +293,57 @@ const PlannerSetup = () => {
                 </SectionCard>
 
                 {/* ── Stores ── */}
-                <SectionCard title="Stores" icon={null}>
+                <SectionCard title="Stores">
                     <div className="form-group">
-                        <label>Shopping Categories</label>
-                        <PillSelector
+                        <label>Shopping Category</label>
+                        <MultiPillSelector
                             options={storeTypes}
                             selected={prefs.stores.types}
-                            onChange={val => update('stores', { ...prefs.stores, types: val })}
+                            onChange={vals => update('stores', { ...prefs.stores, types: vals })}
                         />
                     </div>
                 </SectionCard>
 
                 {/* ── Recommendation Engine ── */}
-                <div className="planner-global-settings">
-                    <h3>Prioritization Engine</h3>
-                    <div className="engine-toggles">
-                        {/* Option 1: District Top Picks */}
-                        <div
-                            className={`engine-card ${prefs.prioritization === 'district_top_picks' ? 'active' : ''}`}
-                            onClick={() => update('prioritization', 'district_top_picks')}
-                        >
-                            <Sparkles size={24} className="engine-icon" />
-                            <h4>District Top Picks</h4>
-                            <p>Prioritize universally highly-rated locations.</p>
-                            {prefs.prioritization === 'district_top_picks' && <div className="engine-check"><Check size={16} /></div>}
-                        </div>
-
-                        {/* Option 2: Friends Network */}
-                        <div
-                            className={`engine-card ${prefs.prioritization === 'friends_network' ? 'active' : ''}`}
-                            onClick={() => update('prioritization', 'friends_network')}
-                        >
-                            <Users2 size={24} className="engine-icon" />
-                            <h4>Friends Network</h4>
-                            <p>Prioritize highly rated places visited by friends.</p>
-                            {prefs.prioritization === 'friends_network' && <div className="engine-check"><Check size={16} /></div>}
-                        </div>
-
-                        {/* Option 3: Budget Friendly */}
-                        <div
-                            className={`engine-card ${prefs.prioritization === 'budget_friendly' ? 'active' : ''}`}
-                            onClick={() => update('prioritization', 'budget_friendly')}
-                        >
-                            <Wallet size={24} className="engine-icon" />
-                            <h4>Budget Friendly</h4>
-                            <p>Prioritize the most affordable options.</p>
-                            {prefs.prioritization === 'budget_friendly' && <div className="engine-check"><Check size={16} /></div>}
+                <div className="planner-section">
+                    <div className="planner-global-settings">
+                        <h3>Prioritization Engine</h3>
+                        <div className="engine-toggles">
+                            <div
+                                className={`engine-card ${prefs.prioritization === 'district_top_picks' ? 'active' : ''}`}
+                                onClick={() => update('prioritization', 'district_top_picks')}
+                            >
+                                <Sparkles size={24} className="engine-icon" />
+                                <h4>District Top Picks</h4>
+                                <p>Prioritize universally highly-rated locations.</p>
+                                {prefs.prioritization === 'district_top_picks' && <div className="engine-check"><Check size={16} /></div>}
+                            </div>
+                            <div
+                                className={`engine-card ${prefs.prioritization === 'friends_network' ? 'active' : ''}`}
+                                onClick={() => update('prioritization', 'friends_network')}
+                            >
+                                <Users2 size={24} className="engine-icon" />
+                                <h4>Friends Network</h4>
+                                <p>Prioritize highly rated places visited by friends.</p>
+                                {prefs.prioritization === 'friends_network' && <div className="engine-check"><Check size={16} /></div>}
+                            </div>
+                            <div
+                                className={`engine-card ${prefs.prioritization === 'budget_friendly' ? 'active' : ''}`}
+                                onClick={() => update('prioritization', 'budget_friendly')}
+                            >
+                                <Wallet size={24} className="engine-icon" />
+                                <h4>Budget Friendly</h4>
+                                <p>Prioritize the most affordable options.</p>
+                                {prefs.prioritization === 'budget_friendly' && <div className="engine-check"><Check size={16} /></div>}
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {/* ── Submit ── */}
                 <div className="planner-footer">
-                    <button className="btn-primary large" onClick={generatePlan}>
-                        Generate Itineraries
+                    <button className="btn-generate" onClick={generatePlan}>
+                        ✦ Generate Itinerary
                     </button>
                 </div>
             </div>

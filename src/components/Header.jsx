@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, MapPin, User, Bell } from 'lucide-react';
+import { Search, MapPin, User, Bell, Bookmark } from 'lucide-react';
 import { restaurants, movies, events, stores, activities, playFacilities } from '../data/mockData';
 import '../styles/Header.css';
 import '../styles/Layout.css';
@@ -58,7 +58,11 @@ const Header = () => {
                         <span className="location-text" style={{ fontWeight: 700, fontSize: 14 }}>Andheri West, Mumbai</span>
                     </div>
                 </div>
+                <img src="/district-logo.png" alt="District by Zomato" style={{ height: 42, objectFit: 'contain', position: 'absolute', left: '50%', transform: 'translateX(-50%)' }} />
                 <div className="profile-actions">
+                    <Link to="/saved-itineraries" className="icon-wrapper" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Bookmark size={20} />
+                    </Link>
                     <Link to="/notifications" className="icon-wrapper" style={{ textDecoration: 'none', color: 'inherit' }}>
                         <Bell size={20} />
                     </Link>

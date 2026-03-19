@@ -6,17 +6,22 @@ import '../styles/Listing.css';
 import '../styles/Movies.css';
 
 const Stores = () => {
-    const [selectedType, setSelectedType] = useState(null);
+    const [selectedType, setSelectedType] = useState(() => sessionStorage.getItem('filter_stores') || null);
 
     // Filter Logic
     const filteredStores = selectedType
         ? stores.filter(s => s.type === selectedType)
         : stores;
 
-    const topPicks = stores.filter(s => s.rating >= 4.7);
-    const friendVisited = stores.filter(s => s.friendsActivity && s.friendsActivity.length > 0);
+    const topPicks = [...stores].sort((a, b) => b.rating - a.rating).slice(0, 10);
+    const friendVisited = filteredStores.filter(s => s.friendsActivity && s.friendsActivity.length > 0);
 
-    const toggleType = (id) => setSelectedType(selectedType === id ? null : id);
+    const toggleType = (id) => {
+        const next = selectedType === id ? null : id;
+        setSelectedType(next);
+        if (next) sessionStorage.setItem('filter_stores', next);
+        else sessionStorage.removeItem('filter_stores');
+    };
 
     return (
         <div className="listing-page">
@@ -38,48 +43,111 @@ const Stores = () => {
                 ))}
             </div>
 
-            {/* Default View Sections */}
+            {/* Default View Sections (no filter active) */}
             {!selectedType && (
                 <>
                     <h2 className="section-title">Top Picks</h2>
-                    <div className="movie-section">
-                        <div className="movie-horizontal-list">
-                            {topPicks.map(item => (
-                                <Link to={`/stores/${item.id}`} key={item.id} className="movie-card-portrait" style={{ minWidth: '200px', width: '200px' }}>
-                                    <img src={item.image} alt={item.title} className="movie-poster" style={{ height: '140px' }} />
-                                    <div className="movie-info">
-                                        <div className="movie-title">{item.title}</div>
-                                        <div className="rating" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: 'var(--color-dark-gray)' }}>
-                                            <Star size={12} fill="#E23744" stroke="none" />
-                                            <span style={{ fontWeight: 700 }}>{item.rating}</span>
-                                            <span style={{ fontSize: '10px', marginLeft: '2px' }}>({item.reviewsCount})</span>
+                    <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
+                        {topPicks.map(item => (
+                            <Link to={`/stores/${item.id}`} key={item.id} className="card">
+                                <img src={item.image} alt={item.title} className="card-image" />
+                                <div className="card-content">
+                                    <div className="card-header">
+                                        <h3>{item.title}</h3>
+                                        <div className="card-rating">
+                                            <Star size={11} fill="#6366F1" stroke="none" />
+                                            <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                            <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
                                         </div>
                                     </div>
-                                </Link>
-                            ))}
-                        </div>
+                                    <p className="card-subtitle">{item.category}</p>
+                                    <p className="card-subtitle" style={{ fontWeight: 600, color: 'var(--color-brand)' }}>{item.offer}</p>
+                                    <div className="card-footer">
+                                        <MapPin size={11} />
+                                        <span>{item.location}</span>
+                                        {item.distanceKm && <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#888' }}>{item.distanceKm} km</span>}
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
 
-                    <h2 className="section-title">Friends Visited</h2>
-                    <div className="movie-section">
-                        <div className="movie-horizontal-list">
-                            {friendVisited.map(item => (
-                                <Link to={`/stores/${item.id}`} key={item.id} className="movie-card-portrait" style={{ minWidth: '200px', width: '200px' }}>
-                                    <img src={item.image} alt={item.title} className="movie-poster" style={{ height: '140px' }} />
-                                    <div className="movie-info">
-                                        <div className="movie-title">{item.title}</div>
-                                        <div className="movie-friend-activity" style={{ marginTop: '8px' }}>
-                                            <div style={{ display: 'flex', marginRight: '6px' }}>
-                                                {item.friendsActivity.slice(0, 3).map((f, i) => (
-                                                    <img key={i} src={f.avatar} alt={f.name} className="movie-friend-avatar" style={{ marginLeft: i > 0 ? '-8px' : 0, border: '2px solid white' }} />
-                                                ))}
+                    {/* Friends Visited — shown in default view */}
+                    {friendVisited.length > 0 && (
+                        <>
+                            <h2 className="section-title">Friends Visited</h2>
+                            <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
+                                {friendVisited.map(item => (
+                                    <Link to={`/stores/${item.id}`} key={item.id} className="card">
+                                        <img src={item.image} alt={item.title} className="card-image" />
+                                        <div className="card-content">
+                                            <div className="card-header">
+                                                <h3>{item.title}</h3>
+                                                <div className="card-rating">
+                                                    <Star size={11} fill="#6366F1" stroke="none" />
+                                                    <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                                    <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
+                                                </div>
                                             </div>
-                                            <span>{item.friendsActivity[0].name}{item.friendsActivity.length > 1 ? ` +${item.friendsActivity.length - 1}` : ''} rated {item.friendsActivity[0].rating}</span>
+                                            <p className="card-subtitle">{item.category}</p>
+                                            <p className="card-subtitle" style={{ fontWeight: 600, color: 'var(--color-brand)' }}>{item.offer}</p>
+                                            <div className="card-footer">
+                                                <MapPin size={11} />
+                                                <span>{item.location}</span>
+                                                {item.distanceKm && <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#888' }}>{item.distanceKm} km</span>}
+                                            </div>
+                                            <div className="friend-activity" style={{ marginTop: '6px' }}>
+                                                <div style={{ display: 'flex', marginRight: '6px' }}>
+                                                    {item.friendsActivity.slice(0, 3).map((f, i) => (
+                                                        <img key={i} src={f.avatar} alt={f.name} className="friend-avatar" style={{ marginLeft: i > 0 ? '-6px' : 0, border: '2px solid white' }} />
+                                                    ))}
+                                                </div>
+                                                <span className="friend-text">{item.friendsActivity[0].name}{item.friendsActivity.length > 1 ? ` +${item.friendsActivity.length - 1}` : ''} rated {item.friendsActivity[0].rating} <Star size={8} fill="#6366F1" stroke="none" style={{ display: 'inline' }} /></span>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </>
+            )}
+
+            {/* Friends Visited — shown when filter is active (filtered results) */}
+            {selectedType && friendVisited.length > 0 && (
+                <>
+                    <h2 className="section-title">Friends Visited</h2>
+                    <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
+                        {friendVisited.map(item => (
+                            <Link to={`/stores/${item.id}`} key={item.id} className="card">
+                                <img src={item.image} alt={item.title} className="card-image" />
+                                <div className="card-content">
+                                    <div className="card-header">
+                                        <h3>{item.title}</h3>
+                                        <div className="card-rating">
+                                            <Star size={11} fill="#6366F1" stroke="none" />
+                                            <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                            <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
                                         </div>
                                     </div>
-                                </Link>
-                            ))}
-                        </div>
+                                    <p className="card-subtitle">{item.category}</p>
+                                    <p className="card-subtitle" style={{ fontWeight: 600, color: 'var(--color-brand)' }}>{item.offer}</p>
+                                    <div className="card-footer">
+                                        <MapPin size={11} />
+                                        <span>{item.location}</span>
+                                        {item.distanceKm && <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#888' }}>{item.distanceKm} km</span>}
+                                    </div>
+                                    <div className="friend-activity" style={{ marginTop: '6px' }}>
+                                        <div style={{ display: 'flex', marginRight: '6px' }}>
+                                            {item.friendsActivity.slice(0, 3).map((f, i) => (
+                                                <img key={i} src={f.avatar} alt={f.name} className="friend-avatar" style={{ marginLeft: i > 0 ? '-6px' : 0, border: '2px solid white' }} />
+                                            ))}
+                                        </div>
+                                        <span className="friend-text">{item.friendsActivity[0].name}{item.friendsActivity.length > 1 ? ` +${item.friendsActivity.length - 1}` : ''} rated {item.friendsActivity[0].rating} <Star size={8} fill="#6366F1" stroke="none" style={{ display: 'inline' }} /></span>
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 </>
             )}
@@ -98,10 +166,10 @@ const Stores = () => {
                             <div className="listing-header">
                                 <h3>{item.title}</h3>
                                 {item.rating && (
-                                    <div className="rating-pill" style={{ position: 'static' }}>
-                                        <Star size={12} fill="#E23744" stroke="none" />
-                                        <span>{item.rating}</span>
-                                        <span style={{ fontSize: '10px', color: 'var(--color-gray)', marginLeft: '4px' }}>({item.reviewsCount})</span>
+                                    <div style={{ display: 'inline-flex', marginTop: '4px', alignItems: 'center', gap: '3px' }}>
+                                        <Star size={10} fill="#6366F1" stroke="none" />
+                                        <span style={{ fontWeight: 700, fontSize: '12px', color: '#6366F1' }}>{item.rating}</span>
+                                        <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
                                     </div>
                                 )}
                             </div>
@@ -109,11 +177,18 @@ const Stores = () => {
                                 <Tag size={14} className="meta-icon" />
                                 <span>{item.category}</span>
                             </div>
-                            <div className="event-meta-row">
-                                <MapPin size={14} className="meta-icon" />
-                                <span>{item.location}</span>
+                            {item.offer && <p className="listing-subtitle" style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--color-brand)', fontWeight: 600 }}>{item.offer}</p>}
+                            <div className="listing-footer">
+                                <div className="location">
+                                    <MapPin size={11} />
+                                    <span className="location-text">{item.location}</span>
+                                </div>
+                                {item.distanceKm && (
+                                    <div className="distance" style={{ fontSize: 11, color: '#888' }}>
+                                        {item.distanceKm} km away
+                                    </div>
+                                )}
                             </div>
-
                         </div>
                     </Link>
                 ))}

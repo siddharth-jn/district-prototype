@@ -6,8 +6,12 @@ import '../styles/Listing.css';
 import '../styles/Movies.css';
 
 const Movies = () => {
-    const [selectedGenre, setSelectedGenre] = useState(null);
-    const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const [selectedGenre, setSelectedGenre] = useState(() => sessionStorage.getItem('filter_movies_genre') || null);
+    const [selectedLanguage, setSelectedLanguage] = useState(() => {
+        const saved = sessionStorage.getItem('filter_movies_language');
+        if (!saved) return null;
+        return movieLanguages.find(l => l.id === saved) || null;
+    });
 
     // Filter Logic
     const filteredMovies = movies.filter(m => {
@@ -17,8 +21,8 @@ const Movies = () => {
     });
 
     const newReleases = movies.filter(m => m.newRelease);
-    const topPicks = movies.filter(m => m.rating >= 4.7);
-    const friendWatches = movies.filter(m => m.friendsActivity && m.friendsActivity.length > 0);
+    const topPicks = [...movies].sort((a, b) => b.rating - a.rating).slice(0, 10);
+    const friendWatches = filteredMovies.filter(m => m.friendsActivity && m.friendsActivity.length > 0);
 
     const getIcon = (iconName) => {
         switch (iconName) {
@@ -32,8 +36,19 @@ const Movies = () => {
         }
     };
 
-    const toggleGenre = (id) => setSelectedGenre(selectedGenre === id ? null : id);
-    const toggleLanguage = (lang) => setSelectedLanguage(selectedLanguage === lang ? null : lang);
+    const toggleGenre = (id) => {
+        const next = selectedGenre === id ? null : id;
+        setSelectedGenre(next);
+        if (next) sessionStorage.setItem('filter_movies_genre', next);
+        else sessionStorage.removeItem('filter_movies_genre');
+    };
+
+    const toggleLanguage = (lang) => {
+        const next = selectedLanguage === lang ? null : lang;
+        setSelectedLanguage(next);
+        if (next) sessionStorage.setItem('filter_movies_language', next.id);
+        else sessionStorage.removeItem('filter_movies_language');
+    };
 
     return (
         <div className="listing-page movies-page">
@@ -71,70 +86,116 @@ const Movies = () => {
                 ))}
             </div>
 
-            {/* Default View Sections */}
+            {/* Default View Sections (no filters active) */}
             {!selectedGenre && !selectedLanguage && (
                 <>
                     <h2 className="section-title">New Releases</h2>
-                    <div className="movie-section">
-                        <div className="movie-horizontal-list">
-                            {newReleases.map(item => (
-                                <Link to={`/movies/${item.id}`} key={item.id} className="movie-card-portrait">
-                                    <img src={item.image} alt={item.title} className="movie-poster" />
-                                    <div className="movie-info">
-                                        <div className="movie-title">{item.title}</div>
-                                        <div className="movie-genre">{item.genre}</div>
-                                        {item.rating && (
-                                            <div className="rating" style={{ display: 'inline-flex', marginTop: '4px', alignItems: 'center' }}>
-                                                <Star size={10} fill="#E23744" stroke="none" />
-                                                <span style={{ marginLeft: 4, fontWeight: 700, fontSize: '12px' }}>{item.rating}</span>
-                                                <span style={{ fontSize: '10px', marginLeft: 4, color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
-                                            </div>
-                                        )}
+                    <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
+                        {newReleases.map(item => (
+                            <Link to={`/movies/${item.id}`} key={item.id} className="card">
+                                <img src={item.image} alt={item.title} className="card-image" style={{ height: '160px' }} />
+                                <div className="card-content">
+                                    <div className="card-header">
+                                        <h3>{item.title}</h3>
+                                        <div className="card-rating">
+                                            <Star size={11} fill="#6366F1" stroke="none" />
+                                            <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                            <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
+                                        </div>
                                     </div>
-                                </Link>
-                            ))}
-                        </div>
+                                    <p className="card-subtitle">{item.genre}</p>
+                                    {item.language && <p className="card-subtitle">{item.language}</p>}
+                                </div>
+                            </Link>
+                        ))}
                     </div>
 
                     <h2 className="section-title">Top Rated</h2>
-                    <div className="movie-section">
-                        <div className="movie-horizontal-list">
-                            {topPicks.map(item => (
-                                <Link to={`/movies/${item.id}`} key={item.id} className="movie-card-portrait">
-                                    <img src={item.image} alt={item.title} className="movie-poster" />
-                                    <div className="movie-info">
-                                        <div className="movie-title">{item.title}</div>
-                                        <div className="rating" style={{ display: 'inline-flex' }}>
-                                            <Star size={12} fill="#E23744" stroke="none" />
-                                            <span style={{ marginLeft: 4, fontWeight: 700 }}>{item.rating}</span>
-                                            <span style={{ fontSize: '10px', marginLeft: 4, color: 'var(--color-dark-gray)' }}>({item.reviewsCount})</span>
+                    <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
+                        {topPicks.map(item => (
+                            <Link to={`/movies/${item.id}`} key={item.id} className="card">
+                                <img src={item.image} alt={item.title} className="card-image" style={{ height: '160px' }} />
+                                <div className="card-content">
+                                    <div className="card-header">
+                                        <h3>{item.title}</h3>
+                                        <div className="card-rating">
+                                            <Star size={11} fill="#6366F1" stroke="none" />
+                                            <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                            <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
                                         </div>
                                     </div>
-                                </Link>
-                            ))}
-                        </div>
+                                    <p className="card-subtitle">{item.genre}</p>
+                                    {item.language && <p className="card-subtitle">{item.language}</p>}
+                                </div>
+                            </Link>
+                        ))}
                     </div>
 
-                    <h2 className="section-title">Friends Watched</h2>
-                    <div className="movie-section">
-                        <div className="movie-horizontal-list">
-                            {friendWatches.map(item => (
-                                <Link to={`/movies/${item.id}`} key={item.id} className="movie-card-portrait">
-                                    <img src={item.image} alt={item.title} className="movie-poster" />
-                                    <div className="movie-info">
-                                        <div className="movie-title">{item.title}</div>
-                                        <div className="movie-friend-activity">
-                                            <div style={{ display: 'flex', marginRight: '6px' }}>
-                                                {item.friendsActivity.slice(0, 3).map((f, i) => (
-                                                    <img key={i} src={f.avatar} alt={f.name} className="movie-friend-avatar" style={{ marginLeft: i > 0 ? '-8px' : 0, border: '2px solid white' }} />
-                                                ))}
+                    {/* Friends Watched — shown in default view */}
+                    {friendWatches.length > 0 && (
+                        <>
+                            <h2 className="section-title">Friends Watched</h2>
+                            <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
+                                {friendWatches.map(item => (
+                                    <Link to={`/movies/${item.id}`} key={item.id} className="card">
+                                        <img src={item.image} alt={item.title} className="card-image" style={{ height: '160px' }} />
+                                        <div className="card-content">
+                                            <div className="card-header">
+                                                <h3>{item.title}</h3>
+                                                <div className="card-rating">
+                                                    <Star size={11} fill="#6366F1" stroke="none" />
+                                                    <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                                    <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
+                                                </div>
                                             </div>
-                                            <span>{item.friendsActivity[0].name}{item.friendsActivity.length > 1 ? ` +${item.friendsActivity.length - 1}` : ''} rated {item.friendsActivity[0].rating}</span>
+                                            <p className="card-subtitle">{item.genre}</p>
+                                            {item.language && <p className="card-subtitle">{item.language}</p>}
+                                            <div className="friend-activity" style={{ marginTop: '6px' }}>
+                                                <div style={{ display: 'flex', marginRight: '6px' }}>
+                                                    {item.friendsActivity.slice(0, 3).map((f, i) => (
+                                                        <img key={i} src={f.avatar} alt={f.name} className="friend-avatar" style={{ marginLeft: i > 0 ? '-6px' : 0, border: '2px solid white' }} />
+                                                    ))}
+                                                </div>
+                                                <span className="friend-text">{item.friendsActivity[0].name}{item.friendsActivity.length > 1 ? ` +${item.friendsActivity.length - 1}` : ''} rated {item.friendsActivity[0].rating} <Star size={8} fill="#6366F1" stroke="none" style={{ display: 'inline' }} /></span>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </>
+            )}
+
+            {/* Friends Watched — shown when filter is active */}
+            {(selectedGenre || selectedLanguage) && friendWatches.length > 0 && (
+                <>
+                    <h2 className="section-title">Friends Watched</h2>
+                    <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
+                        {friendWatches.map(item => (
+                            <Link to={`/movies/${item.id}`} key={item.id} className="card">
+                                <img src={item.image} alt={item.title} className="card-image" style={{ height: '160px' }} />
+                                <div className="card-content">
+                                    <div className="card-header">
+                                        <h3>{item.title}</h3>
+                                        <div className="card-rating">
+                                            <Star size={11} fill="#6366F1" stroke="none" />
+                                            <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                            <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
                                         </div>
                                     </div>
-                                </Link>
-                            ))}
-                        </div>
+                                    <p className="card-subtitle">{item.genre}</p>
+                                    <div className="friend-activity" style={{ marginTop: '6px' }}>
+                                        <div style={{ display: 'flex', marginRight: '6px' }}>
+                                            {item.friendsActivity.slice(0, 3).map((f, i) => (
+                                                <img key={i} src={f.avatar} alt={f.name} className="friend-avatar" style={{ marginLeft: i > 0 ? '-6px' : 0, border: '2px solid white' }} />
+                                            ))}
+                                        </div>
+                                        <span className="friend-text">{item.friendsActivity[0].name}{item.friendsActivity.length > 1 ? ` +${item.friendsActivity.length - 1}` : ''} rated {item.friendsActivity[0].rating} <Star size={8} fill="#6366F1" stroke="none" style={{ display: 'inline' }} /></span>
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 </>
             )}
@@ -145,18 +206,18 @@ const Movies = () => {
             </h2>
             <div className="listing-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
                 {filteredMovies.map((item) => (
-                    <Link to={`/movies/${item.id}`} key={item.id} className="movie-card-portrait" style={{ width: '100%' }}>
-                        <img src={item.image} alt={item.title} className="movie-poster" />
-                        <div className="movie-info">
-                            <div className="movie-title">{item.title}</div>
-                            <div className="movie-genre">{item.genre} • {item.language}</div>
-                            {item.rating && (
-                                <div className="rating" style={{ display: 'inline-flex', marginTop: '4px', alignItems: 'center' }}>
-                                    <Star size={10} fill="#E23744" stroke="none" />
-                                    <span style={{ marginLeft: 4, fontWeight: 700, fontSize: '12px', color: '#E23744' }}>{item.rating}</span>
-                                    <span style={{ fontSize: '10px', marginLeft: 4, color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
+                    <Link to={`/movies/${item.id}`} key={item.id} className="card" style={{ width: '100%' }}>
+                        <img src={item.image} alt={item.title} className="card-image" style={{ height: '160px' }} />
+                        <div className="card-content">
+                            <div className="card-header">
+                                <h3>{item.title}</h3>
+                                <div className="card-rating">
+                                    <Star size={11} fill="#6366F1" stroke="none" />
+                                    <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                    <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
                                 </div>
-                            )}
+                            </div>
+                            <p className="card-subtitle">{item.genre}{item.language ? ` · ${item.language}` : ''}</p>
                         </div>
                     </Link>
                 ))}

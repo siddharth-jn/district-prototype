@@ -6,8 +6,8 @@ import '../styles/Listing.css';
 import '../styles/Dining.css';
 
 const Dining = () => {
-    const [selectedMood, setSelectedMood] = useState(null);
-    const [selectedCuisine, setSelectedCuisine] = useState(null);
+    const [selectedMood, setSelectedMood] = useState(() => sessionStorage.getItem('filter_dining_mood') || null);
+    const [selectedCuisine, setSelectedCuisine] = useState(() => sessionStorage.getItem('filter_dining_cuisine') || null);
 
     // Filter logic
     const filteredRestaurants = restaurants.filter(r => {
@@ -16,17 +16,22 @@ const Dining = () => {
         return true;
     });
 
-    const topPicks = restaurants.filter(r => r.rating >= 4.8);
-    const friendVisits = restaurants.filter(r => r.friendsActivity && r.friendsActivity.length > 0);
+    const topPicks = [...restaurants].sort((a, b) => b.rating - a.rating).slice(0, 10);
+    const friendVisits = filteredRestaurants.filter(r => r.friendsActivity && r.friendsActivity.length > 0);
 
     const toggleMood = (id) => {
-        setSelectedMood(selectedMood === id ? null : id);
-        setSelectedCuisine(null); // Reset cuisine when changing mood for better flow? Or keep combined? Let's keep combined but maybe reset to avoid zero results often.
-        // Actually user said "Selecting each mood should show...". Let's allow combination but maybe it's safer to clear the other to avoid empty states if data is sparse.
-        // For now, I'll allow independent selection.
+        const next = selectedMood === id ? null : id;
+        setSelectedMood(next);
+        if (next) sessionStorage.setItem('filter_dining_mood', next);
+        else sessionStorage.removeItem('filter_dining_mood');
     };
 
-    const toggleCuisine = (id) => setSelectedCuisine(selectedCuisine === id ? null : id);
+    const toggleCuisine = (id) => {
+        const next = selectedCuisine === id ? null : id;
+        setSelectedCuisine(next);
+        if (next) sessionStorage.setItem('filter_dining_cuisine', next);
+        else sessionStorage.removeItem('filter_dining_cuisine');
+    };
 
     return (
         <div className="listing-page dining-page">
@@ -63,45 +68,102 @@ const Dining = () => {
                 ))}
             </div>
 
-            {/* Default View (No filters) - Show Top Picks & Friends */}
+            {/* Default View (No filters) - Show Top Picks + Friends */}
             {!selectedMood && !selectedCuisine && (
                 <>
                     <h2 className="section-title">Top Picks for You</h2>
-                    <div className="horizontal-list">
+                    <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
                         {topPicks.map(item => (
-                            <Link to={`/dining/${item.id}`} key={item.id} className="mini-card">
-                                <img src={item.image} alt={item.name} className="mini-card-image" />
-                                <div className="mini-card-content">
-                                    <div className="mini-card-title">{item.name}</div>
-                                    <div className="rating" style={{ display: 'inline-flex', marginBottom: '4px' }}>
-                                        <span className="rating-value">{item.rating}</span>
-                                        <Star size={8} fill="white" />
-                                        <span style={{ fontSize: '8px', marginLeft: '2px', opacity: 0.8 }}>({item.reviewsCount})</span>
+                            <Link to={`/dining/${item.id}`} key={item.id} className="card">
+                                <img src={item.image} alt={item.name} className="card-image" />
+                                <div className="card-content">
+                                    <div className="card-header">
+                                        <h3>{item.name}</h3>
+                                        <div className="card-rating">
+                                            <Star size={11} fill="#6366F1" stroke="none" />
+                                            <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                            <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
+                                        </div>
                                     </div>
-                                    <p className="mini-card-subtitle" style={{ fontWeight: 600, color: '#333' }}>{item.cuisine} • {item.priceForTwo || item.price}</p>
-                                    {item.distanceKm && (
-                                        <p style={{ fontSize: 10, color: '#888', margin: '4px 0 0 0', display: 'flex', alignItems: 'center', gap: 2 }}>
-                                            <MapPin size={10} style={{ opacity: 0.7 }} /> {item.distanceKm} km from Andheri West
-                                        </p>
-                                    )}
+                                    <p className="card-subtitle">{item.cuisine}</p>
+                                    <p className="card-subtitle" style={{ fontWeight: 600, color: '#444' }}>{item.priceForTwo || item.price}</p>
+                                    <div className="card-footer">
+                                        <MapPin size={11} />
+                                        <span>{item.location}</span>
+                                        {item.distanceKm && <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#888' }}>{item.distanceKm} km</span>}
+                                    </div>
                                 </div>
                             </Link>
                         ))}
                     </div>
 
+                    {/* Friends are Visiting — shown in default view */}
+                    {friendVisits.length > 0 && (
+                        <>
+                            <h2 className="section-title">Friends are Visiting</h2>
+                            <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
+                                {friendVisits.map(item => (
+                                    <Link to={`/dining/${item.id}`} key={item.id} className="card">
+                                        <img src={item.image} alt={item.name} className="card-image" />
+                                        <div className="card-content">
+                                            <div className="card-header">
+                                                <h3>{item.name}</h3>
+                                                <div className="card-rating">
+                                                    <Star size={11} fill="#6366F1" stroke="none" />
+                                                    <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                                    <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
+                                                </div>
+                                            </div>
+                                            <p className="card-subtitle">{item.cuisine}</p>
+                                            <p className="card-subtitle" style={{ fontWeight: 600, color: '#444' }}>{item.priceForTwo || item.price}</p>
+                                            <div className="card-footer">
+                                                <MapPin size={11} />
+                                                <span>{item.location}</span>
+                                                {item.distanceKm && <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#888' }}>{item.distanceKm} km</span>}
+                                            </div>
+                                            <div className="friend-activity" style={{ marginTop: '6px' }}>
+                                                <div style={{ display: 'flex', marginRight: '6px' }}>
+                                                    {item.friendsActivity.slice(0, 3).map((f, i) => (
+                                                        <img key={i} src={f.avatar} alt={f.name} className="friend-avatar" style={{ marginLeft: i > 0 ? '-8px' : 0, border: '2px solid white' }} />
+                                                    ))}
+                                                </div>
+                                                <span className="friend-text">
+                                                    {item.friendsActivity[0].name}{item.friendsActivity.length > 1 ? ` +${item.friendsActivity.length - 1}` : ''} rated {item.friendsActivity[0].rating} <Star size={8} fill="#6366F1" stroke="none" style={{ display: 'inline' }} />
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </>
+                    )}
+                </>
+            )}
+
+            {/* Friends are Visiting — shown when filter is active (filtered results) */}
+            {(selectedMood || selectedCuisine) && friendVisits.length > 0 && (
+                <>
                     <h2 className="section-title">Friends are Visiting</h2>
-                    <div className="horizontal-list">
+                    <div className="horizontal-scroll" style={{ display: 'flex', gap: '12px', overflowX: 'auto', padding: '0 16px 4px', scrollbarWidth: 'none' }}>
                         {friendVisits.map(item => (
-                            <Link to={`/dining/${item.id}`} key={item.id} className="mini-card">
-                                <img src={item.image} alt={item.name} className="mini-card-image" />
-                                <div className="mini-card-content">
-                                    <div className="mini-card-title">{item.name}</div>
-                                    <p className="mini-card-subtitle" style={{ fontWeight: 600, color: '#333' }}>{item.cuisine} • {item.priceForTwo || item.price}</p>
-                                    {item.distanceKm && (
-                                        <p style={{ fontSize: 10, color: '#888', margin: '4px 0 4px 0', display: 'flex', alignItems: 'center', gap: 2 }}>
-                                            <MapPin size={10} style={{ opacity: 0.7 }} /> {item.distanceKm} km from Andheri West
-                                        </p>
-                                    )}
+                            <Link to={`/dining/${item.id}`} key={item.id} className="card">
+                                <img src={item.image} alt={item.name} className="card-image" />
+                                <div className="card-content">
+                                    <div className="card-header">
+                                        <h3>{item.name}</h3>
+                                        <div className="card-rating">
+                                            <Star size={11} fill="#6366F1" stroke="none" />
+                                            <span style={{ fontWeight: 700, fontSize: '11px', color: '#6366F1' }}>{item.rating}</span>
+                                            <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
+                                        </div>
+                                    </div>
+                                    <p className="card-subtitle">{item.cuisine}</p>
+                                    <p className="card-subtitle" style={{ fontWeight: 600, color: '#444' }}>{item.priceForTwo || item.price}</p>
+                                    <div className="card-footer">
+                                        <MapPin size={11} />
+                                        <span>{item.location}</span>
+                                        {item.distanceKm && <span style={{ marginLeft: 'auto', fontSize: '10px', color: '#888' }}>{item.distanceKm} km</span>}
+                                    </div>
                                     <div className="friend-activity" style={{ marginTop: '6px' }}>
                                         <div style={{ display: 'flex', marginRight: '6px' }}>
                                             {item.friendsActivity.slice(0, 3).map((f, i) => (
@@ -109,14 +171,13 @@ const Dining = () => {
                                             ))}
                                         </div>
                                         <span className="friend-text">
-                                            {item.friendsActivity[0].name}{item.friendsActivity.length > 1 ? ` +${item.friendsActivity.length - 1}` : ''} rated {item.friendsActivity[0].rating} <Star size={8} fill="black" style={{ display: 'inline' }} />
+                                            {item.friendsActivity[0].name}{item.friendsActivity.length > 1 ? ` +${item.friendsActivity.length - 1}` : ''} rated {item.friendsActivity[0].rating} <Star size={8} fill="#6366F1" stroke="none" style={{ display: 'inline' }} />
                                         </span>
                                     </div>
                                 </div>
                             </Link>
                         ))}
                     </div>
-
                 </>
             )}
 
@@ -136,10 +197,10 @@ const Dining = () => {
                             <div className="listing-content">
                                 <div className="listing-header">
                                     <h3>{item.name}</h3>
-                                    <div className="rating">
-                                        <span className="rating-value">{item.rating}</span>
-                                        <Star size={10} fill="white" className="star-icon" />
-                                        <span style={{ fontSize: '10px', marginLeft: '4px', opacity: 0.8 }}>({item.reviewsCount})</span>
+                                    <div style={{ display: 'inline-flex', marginTop: '4px', alignItems: 'center', gap: '3px' }}>
+                                        <Star size={10} fill="#6366F1" stroke="none" />
+                                        <span style={{ fontWeight: 700, fontSize: '12px', color: '#6366F1' }}>{item.rating}</span>
+                                        <span style={{ fontSize: '10px', color: 'var(--color-gray)' }}>({item.reviewsCount})</span>
                                     </div>
                                 </div>
                                 <p className="listing-subtitle" style={{ fontWeight: 600, color: '#333' }}>{item.cuisine} • {item.priceForTwo || item.price}</p>
